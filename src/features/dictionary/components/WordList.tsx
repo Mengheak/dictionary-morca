@@ -9,7 +9,7 @@ export default function WordList() {
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
 
-    const { voiceId, speak, speaking } = useTTS();
+    const { speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
 
