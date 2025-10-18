@@ -60,14 +60,14 @@ export default function HistoryPage() {
             <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
                 <div className="sticky top-0 z-20 mb-8 bg-white/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 shadow-lg p-5">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <h1 className="inline-flex flex-wrap items-center gap-2 text-xl text-yellow-700 sm:text-2xl font-bold">
+                        <h1 className="inline-flex flex-wrap items-center gap-2 text-xl text-blue-400 sm:text-2xl font-bold">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
                                 height="28"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="rgb(161 98 7 / 1)"
+                                stroke="rgb(96 165 250 / 1)"
                                 strokeWidth="2"
                                 className="shrink-0"
                                 aria-hidden="true"

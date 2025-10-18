@@ -96,14 +96,11 @@ export default function WordDetails() {
                 </div>
             </div>
 
-            {/* Content Section */}
             <div className="p-6 space-y-6">
-                {/* Definition */}
                 <div className="bg-slate-50 rounded-lg p-4 border-l-4 border-blue-500">
                     <div className="text-slate-800 leading-relaxed text-base">{word.meaning}</div>
                 </div>
 
-                {/* Examples */}
                 {word.examples?.length ? (
                     <div className="space-y-3">
                         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -119,7 +116,45 @@ export default function WordDetails() {
                         </div>
                     </div>
                 ) : null}
+                {
+                    word.relatedWords?.length && (
+                        <div className="space-y-4">
+                            <h3 className='text-lg font-bold text-slate-900 flex items-center gap-2'>
+                                <img src='./related-icon.svg' width={24} />
+                                ពាក្យពាក់ព័ន្ធ
+                            </h3>
 
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {word.relatedWords?.map((related, idx) => (
+                                    <section
+                                        key={idx}
+                                        className="group relative rounded-lg border border-purple-200/60 bg-gradient-to-br overflow-hidden text-left p-4"
+                                    >
+                                        <div className="absolute inset-0 " />
+
+                                        <div className="relative space-y-2">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <span className="text-base font-bold ">
+                                                    {related.term}
+                                                </span>
+                                            </div>
+
+                                            {related.partOfSpeech && (
+                                                <span className="inline-block text-xs font-semibold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-full">
+                                                    {related.partOfSpeech}
+                                                </span>
+                                            )}
+
+                                            <p className="text-sm text-slate-600 group-hover:text-slate-700 transition-colors line-clamp-2 leading-relaxed">
+                                                {related.meaning}
+                                            </p>
+                                        </div>
+                                    </section>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
                 {word.synonyms?.length ? (
                     <div className="space-y-3">
                         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">

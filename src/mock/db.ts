@@ -10,7 +10,7 @@ export type Word = {
   partOfSpeech?: string;
   meaning: string;
   category?: "normal" | string;
-  relatedWords?: TRelatedWord;
+  relatedWords?: TRelatedWord[];
   singKhmer?: string;
   examples?: string[];
   synonyms?: string[];
@@ -43,6 +43,9 @@ const WORDS: Word[] = [
     partOfSpeech: "នាម",
     singKhmer: "Ses",
     meaning: "មនុស្សដែលកំពុងសិក្សានៅសាលា ឬទទួលការបង្រៀន។",
+    relatedWords: [
+      {term: "គ្រូ",partOfSpeech: "នាម", meaning: "អ្នកដែលបង្រៀនសិស្ស"}
+    ],
     examples: ["សិស្សទាំងអស់ត្រូវតែយកចិត្តទុកដាក់ពេលរៀន។"],
     synonyms: ["អ្នកសិក្សា", "និស្សិត"],
   },

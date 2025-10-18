@@ -43,10 +43,7 @@ const setQuery = useStore(s => s.setQuery)
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
-        {/* Header */}
-        <div className="sticky top-0 z-20 mb-8 bg-white/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 shadow-lg p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
+            <div className="mb-5">
               <h1 className="inline-flex items-center gap-3 text-xl sm:text-2xl font-bold">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600">
                   <svg
@@ -58,22 +55,12 @@ const setQuery = useStore(s => s.setQuery)
                     <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/>
                   </svg>
                 </span>
-                <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                  ពាក្យដែលអ្នកចូលចិត្ត
+                <span className="text-yellow-600">
+                  ពាក្យចូលចិត្ត
                 </span>
               </h1>
             </div>
-            <div className="text-right">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-2 rounded-xl border border-amber-200/60">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-amber-500">
-                  <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/>
-                </svg>
-                <span className="font-bold text-lg text-amber-900">{favoriteIds.length}</span>
-                <span className="text-sm text-amber-700 font-medium">ពាក្យ</span>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {favWords?.map((w) => (
@@ -117,13 +104,6 @@ const setQuery = useStore(s => s.setQuery)
             </li>
           ))}
         </ul>
-
-        {/* Stats footer */}
-        <div className="mt-12 text-center">
-          <p className="text-sm text-slate-500">
-            You have <span className="font-semibold text-amber-600">{favoriteIds.length}</span> bookmarked word{favoriteIds.length !== 1 ? "s" : ""}
-          </p>
-        </div>
       </div>
     </div>
   );
