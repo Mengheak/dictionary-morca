@@ -15,9 +15,9 @@ export default function WordList() {
 
     if (!q.trim()) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-center space-y-3">
-                    <div className="text-5xl" aria-hidden>🔍</div>
+            <div className="flex items-center justify-center h-64 text-slate-400">
+                <div className="text-center space-y-3 flex flex-col items-center justify-center">
+                    <div className="text-5xl" aria-hidden><svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></div>
                     <div className="text-slate-500 font-medium">សូមវាយពាក្យដើម្បីស្វែងរក</div>
                     <div className="text-sm text-slate-400">បញ្ចូលពាក្យដើម្បីមើលន័យ</div>
                 </div>
