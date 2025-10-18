@@ -1,8 +1,6 @@
 import { useStore } from '../../../lib/store';
 import { useWordList } from '../queries';
 import { useTTS } from '../../../lib/useTTS';
-import { useEffect, useState } from 'react';
-
 export default function WordList() {
     const q = useStore(s => s.query);
     const page = useStore(s => s.page);
@@ -11,20 +9,10 @@ export default function WordList() {
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
 
-    const { supported, speak, speaking, stop } = useTTS();
+    const {voiceId,  speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
-    const [hasKmVoice, setHasKmVoice] = useState<boolean>(false);
-    useEffect(() => {
-        if (!('speechSynthesis' in window)) return;
-        const check = () => {
-            const vs = window.speechSynthesis.getVoices();
-            setHasKmVoice(vs.some(v => (v.lang || '').toLowerCase().startsWith('km')));
-        };
-        check();
-        window.speechSynthesis.onvoiceschanged = check;
-    }, []);
-    console.log(hasKmVoice)
+
     if (!q.trim()) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -79,11 +67,11 @@ export default function WordList() {
         );
     };
 
-    const handleSpeak = (singKhmer: string) => {
+    const handleSpeak = (term: string) => {
         if (speaking) {
             stop();
         } else {
-            speak(singKhmer)
+            speak(term)
         }
     };
 
@@ -140,13 +128,12 @@ export default function WordList() {
                             </button>
 
                             <div className="flex items-center gap-2">
-                                {/* Listen button */}
-                                {supported && (
+                                {voiceId && (
                                     <button
                                         type="button"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleSpeak(w.singKhmer || "");
+                                            handleSpeak(w.term || "");
                                         }}
                                         className="opacity-0 group-hover:opacity-100 transition-opacity border px-2 py-1 rounded-lg text-slate-700 hover:bg-white hover:shadow-sm border-slate-300"
                                         title="ស្តាប់"
