@@ -64,11 +64,11 @@ export default function DictionaryBackground() {
         </g>
 
         <g opacity="0.5" fontFamily="Georgia, serif" fontWeight="300">
-          <text x="300" y="600" fontSize="120" fill="url(#letterGradient)">A</text>
-          <text x="1200" y="250" fontSize="90" fill="url(#letterGradient)">Z</text>
-          <text x="600" y="150" fontSize="100" fill="url(#letterGradient)">Ω</text>
-          <text x="200" y="700" fontSize="85" fill="url(#letterGradient)">α</text>
-          <text x="1000" y="650" fontSize="95" fill="url(#letterGradient)">書</text>
+          <text x="300" y="600" fontSize="120" fill="url(#letterGradient)">ក</text>
+          <text x="1200" y="250" fontSize="90" fill="url(#letterGradient)">អ</text>
+          <text x="600" y="150" fontSize="100" fill="url(#letterGradient)">ហ</text>
+          <text x="200" y="700" fontSize="85" fill="url(#letterGradient)">ន</text>
+          <text x="1000" y="650" fontSize="95" fill="url(#letterGradient)">ឋ</text>
         </g>
 
         <g opacity="0.2" stroke="#475569" strokeWidth="2" fill="none">
@@ -84,12 +84,7 @@ export default function DictionaryBackground() {
           <line x1="900" y1="530" x2="1080" y2="530" strokeDasharray="5,5">
             <animate attributeName="opacity" values="0.15;0.35;0.15" dur="3.8s" repeatCount="indefinite" />
           </line>
-        </g>
-
-        <g transform="translate(650, 380)" opacity="0.15">
-          <path d="M 0,50 Q 0,20 25,10 Q 50,0 75,10 Q 100,20 100,50 L 100,120 Q 100,130 75,135 Q 50,140 25,135 Q 0,130 0,120 Z" fill="#1e40af" />
-          <line x1="50" y1="10" x2="50" y2="135" stroke="#64748b" strokeWidth="2" />
-        </g>
+        </g>   
       </svg>
 
     </div>

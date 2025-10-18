@@ -2,13 +2,13 @@ import { useStore } from '../../../lib/store';
 import { useWordList } from '../queries';
 import { useTTS } from '../../../lib/useTTS';
 export default function WordList() {
+
     const q = useStore(s => s.query);
     const page = useStore(s => s.page);
     const pageSize = useStore(s => s.pageSize);
     const setPage = useStore(s => s.setPage);
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
-
     const { speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
@@ -99,12 +99,11 @@ export default function WordList() {
                 </div>
             </div>
 
-            {/* Word List */}
-            <ul className="divide-y divide-slate-100" role="list">
+            <ul className="divide-y divide-slate-100 overflow-y-auto" role="list">
                 {data.items.map(w => (
                     <li
                         key={w.id}
-                        className="px-6 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer transition-all duration-200 group"
+                        className="px-6 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer transition-all duration-200 group overflwoys"
                     >
                         <div className="flex items-start justify-between gap-3">
                             <button

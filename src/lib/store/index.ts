@@ -1,5 +1,6 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import type { MouseEventHandler } from "react";
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 type HistoryItem = { id: string; term: string; viewedAt: number };
 
@@ -9,7 +10,7 @@ type Store = {
   pageSize: number;
   selectedWordId: string | null;
   isDetailsOpen: boolean;
-
+  isShowHeader: boolean;
   history: HistoryItem[];
   favoriteIds: string[];
 
@@ -20,18 +21,20 @@ type Store = {
   openDetails: () => void;
   closeDetails: () => void;
   pushHistory: (h: HistoryItem) => void;
+  hideHeader: MouseEventHandler<HTMLButtonElement>
+  showHeader: MouseEventHandler<HTMLButtonElement>
   toggleFavorite: (id: string) => void;
 };
 
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
-      query: '',
+      query: "",
       page: 1,
-      pageSize: 20,
+      pageSize: 5,
       selectedWordId: null,
       isDetailsOpen: false,
-
+      isShowHeader: true,
       history: [],
       favoriteIds: [],
 
@@ -41,17 +44,26 @@ export const useStore = create<Store>()(
       setSelectedWordId: (id) => set({ selectedWordId: id }),
       openDetails: () => set({ isDetailsOpen: true }),
       closeDetails: () => set({ isDetailsOpen: false }),
-
+      hideHeader: () => set({ isShowHeader: false }),
+      showHeader: () => set({isShowHeader: true}),
       pushHistory: (h) => set({ history: [h, ...get().history].slice(0, 100) }),
       toggleFavorite: (id) => {
         const has = get().favoriteIds.includes(id);
-        set({ favoriteIds: has ? get().favoriteIds.filter(x => x !== id) : [id, ...get().favoriteIds] });
+        set({
+          favoriteIds: has
+            ? get().favoriteIds.filter((x) => x !== id)
+            : [id, ...get().favoriteIds],
+        });
       },
     }),
     {
-      name: 'dictionary-ui',
+      name: "dictionary-ui",
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ pageSize: s.pageSize, history: s.history, favoriteIds: s.favoriteIds }),
+      partialize: (s) => ({
+        pageSize: s.pageSize,
+        history: s.history,
+        favoriteIds: s.favoriteIds,
+      }),
     }
   )
 );

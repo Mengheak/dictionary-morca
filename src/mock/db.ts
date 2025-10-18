@@ -396,6 +396,7 @@ const WORDS: Word[] = [
 
 const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
+// --- NORMALIZATION + TOKEN HELPERS (unchanged) ---
 const ZWSP = /\u200B|\u200C|\u200D|\u2060/g;
 function normKm(s: string) {
   return (s ?? "").normalize("NFC").replace(ZWSP, "").trim();
@@ -407,11 +408,52 @@ function tokens(q: string) {
   return lowerKm(q).split(/\s+/).filter(Boolean);
 }
 
+// --- KHMER RANGES (unchanged) ---
 const KH_CONS = /[\u1780-\u17A2]/;
 const KH_DEP = /[\u17B6-\u17D3\u17DD]/;
 const KH_SIGN = /[\u17C6-\u17D3\u17DD]/;
 const KH_VOWEL_ONLY = /[\u17B6-\u17C5\u17BE-\u17C1\u17C4\u17C5]/;
 
+// --- CUSTOM ORDERING YOU REQUESTED ---
+// Consonant order: ក ខ គ ឃ … អ
+const CONSONANT_ORDER = [
+  "ក",
+  "ខ",
+  "គ",
+  "ឃ",
+  "ង",
+  "ច",
+  "ឆ",
+  "ជ",
+  "ឈ",
+  "ញ",
+  "ដ",
+  "ឋ",
+  "ឌ",
+  "ឍ",
+  "ណ",
+  "ត",
+  "ថ",
+  "ទ",
+  "ធ",
+  "ន",
+  "ប",
+  "ផ",
+  "ព",
+  "ភ",
+  "ម",
+  "យ",
+  "រ",
+  "ល",
+  "វ",
+  "ស",
+  "ហ",
+  "ឡ",
+  "អ",
+] as const;
+const CONSONANT_INDEX = new Map(CONSONANT_ORDER.map((c, i) => [c, i]));
+
+// Vowel order: ា ិ ី ឹ ឺ(= “ឺ”) ុ(= “ុ”) ូ(= “ូ”) ួ ើ ឿ ៀ េ ែ ៃ ោ ៅ
 const VOWEL_ORDER = [
   "ា",
   "ិ",
@@ -421,17 +463,30 @@ const VOWEL_ORDER = [
   "ុ",
   "ូ",
   "ួ",
+  "ើ",
+  "ឿ",
+  "ៀ",
   "េ",
   "ែ",
   "ៃ",
   "ោ",
   "ៅ",
-  "ៀ",
-  "ឿ",
-  "ើ",
 ] as const;
 const VOWEL_INDEX = new Map(VOWEL_ORDER.map((v, i) => [v, i]));
 
+// Ending/sign combos order: ុំ្ etc. (deduped & normalized)
+const ENDING_ORDER = [
+  "ុំ", // U+17BB U+17C6
+  "ំ", // U+17C6
+  "ាំ", // U+17B6 U+17C6
+  "ះ", // U+17CB
+  "ុះ", // U+17BB U+17CB
+  "េះ", // U+17C1 U+17CB
+  "ោះ", // U+17C4 U+17CB
+] as const;
+const ENDING_INDEX = new Map(ENDING_ORDER.map((e, i) => [e, i]));
+
+// --- FIRST MATCH HELPERS (reuse your ranges) ---
 function firstConsonant(s: string): string {
   const m = s.match(KH_CONS);
   return m ? m[0] : "";
@@ -447,25 +502,20 @@ function splitKCC(input: string): string[] {
   let cluster = "";
   for (let i = 0; i < s.length; i++) {
     const ch = s[i];
-
     if (KH_CONS.test(ch)) {
       if (cluster) out.push(cluster);
       cluster = ch;
       continue;
     }
-
     if (KH_DEP.test(ch) || KH_SIGN.test(ch)) {
       cluster += ch;
       continue;
     }
-
     if (cluster) {
       out.push(cluster);
       cluster = "";
     }
-    if (!/\s/.test(ch)) {
-      out.push(ch);
-    }
+    if (!/\s/.test(ch)) out.push(ch);
   }
   if (cluster) out.push(cluster);
   return out.filter(Boolean);
@@ -476,8 +526,8 @@ const royalHint = (q: string) => /ព្រះ|រាជ|ម្ចាស់/.tes
 const monkHint = (q: string) =>
   /សង្ឃ|ភិក្ខុ|ព្រះសង្ឃ|សមណ|វត្ត|ធម៌|សាសនា/.test(q);
 
+// --- PHONEME MAP + FUZZY KEY (unchanged) ---
 const PHONEME_MAP: Record<string, string> = {
-  // Consonants (rough categories)
   ក: "k",
   ខ: "kh",
   គ: "k",
@@ -513,7 +563,6 @@ const PHONEME_MAP: Record<string, string> = {
   អ: "a",
   ឣ: "a",
   ឤ: "a",
-
   "ា": "aa",
   "ិ": "i",
   "ី": "ii",
@@ -541,25 +590,23 @@ const PHONEME_MAP: Record<string, string> = {
   "៎": "",
   "៍ំ": "m",
 };
-
 function phonemeKey(str: string): string {
   const kccs = splitKCC(str);
   let out = "";
   for (const kcc of kccs) {
-    for (const ch of kcc) {
-      out += PHONEME_MAP[ch] ?? ch;
-    }
+    for (const ch of kcc) out += PHONEME_MAP[ch] ?? ch;
     out += "-";
   }
   return out.replace(/-+$/, "");
 }
 
+// --- LEVENSHTEIN (unchanged) ---
 function lev(a: string, b: string): number {
   const m = a.length,
     n = b.length;
   if (!m) return n;
   if (!n) return m;
-  const dp = Array.from({ length: m + 1 }, (_) => new Array(n + 1).fill(0));
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
   for (let i = 0; i <= m; i++) dp[i][0] = i;
   for (let j = 0; j <= n; j++) dp[0][j] = j;
   for (let i = 1; i <= m; i++) {
@@ -575,6 +622,7 @@ function lev(a: string, b: string): number {
   return dp[m][n];
 }
 
+// --- SCORING (unchanged) ---
 function scoreWord(
   w: Word,
   qNorm: string,
@@ -652,6 +700,77 @@ export type TKhVowels =
   | "ៃ"
   | "ោ"
   | "ៅ";
+export type TKhConsonant =
+  | "ក"
+  | "ខ"
+  | "គ"
+  | "ឃ"
+  | "ង"
+  | "ច"
+  | "ឆ"
+  | "ជ"
+  | "ឈ"
+  | "ញ"
+  | "ដ"
+  | "ឋ" | "ឌ" | "ឍ" | "ណ"
+  | "ត"
+  | "ថ"
+  | "ទ"
+  | "ធ"
+  | "ន"
+  | "ប"
+  | "ផ"
+  | "ព"
+  | "ភ"
+  | "ម"
+  | "យ"
+  | "រ"
+  | "ល"
+  | "វ"
+  | "ស"
+  | "ហ"
+  | "ឡ"
+  | "អ";
+export type TKhEndingVowels = (typeof ENDING_ORDER)[number];
+// --- ORDERING HELPERS ---
+function firstConsonantIndexKM(s: string): number {
+  const c = firstConsonant(s) as TKhConsonant;
+  return CONSONANT_INDEX.has(c) ? (CONSONANT_INDEX.get(c) as number) : 999;
+}
+function firstVowelIndexKM(s: string): number {
+  const v = firstDependentVowel(s) as TKhVowels;
+  return VOWEL_INDEX.has(v) ? (VOWEL_INDEX.get(v) as number) : 999;
+}
+function endingTagKM(s: string): string {
+  for (const e of ENDING_ORDER) {
+    if (s.includes(e)) return e;
+  }
+  return "";
+}
+function endingIndexKM(s: string): number {
+  const tag = endingTagKM(s) as TKhEndingVowels;
+  return ENDING_INDEX.has(tag) ? (ENDING_INDEX.get(tag) as number) : 999;
+}
+
+function khAlphabetCompare(aTerm: string, bTerm: string): number {
+  const ca = firstConsonantIndexKM(aTerm);
+  const cb = firstConsonantIndexKM(bTerm);
+  if (ca !== cb) return ca - cb;
+
+  const va = firstVowelIndexKM(aTerm);
+  const vb = firstVowelIndexKM(bTerm);
+  if (va !== vb) return va - vb;
+
+  const ea = endingIndexKM(aTerm);
+  const eb = endingIndexKM(bTerm);
+  if (ea !== eb) return ea - eb;
+
+  const la = lowerKm(aTerm).length;
+  const lb = lowerKm(bTerm).length;
+  if (la !== lb) return la - lb;
+
+  return lowerKm(aTerm).localeCompare(lowerKm(bTerm), "km");
+}
 
 function vowelComparator(a: Word, b: Word, queryInitial: string | null) {
   if (!queryInitial) return 0;
@@ -669,6 +788,7 @@ function vowelComparator(a: Word, b: Word, queryInitial: string | null) {
   const ib = VOWEL_INDEX.has(vb) ? (VOWEL_INDEX.get(vb) as number) : -1;
 
   if (ia !== ib) return ia - ib;
+
   // tie-breakers
   const la = lowerKm(a.term).length;
   const lb = lowerKm(b.term).length;
@@ -676,59 +796,71 @@ function vowelComparator(a: Word, b: Word, queryInitial: string | null) {
   return lowerKm(a.term).localeCompare(lowerKm(b.term), "km");
 }
 
-export async function repoSearchWords(
-  q: string,
-  page: number,
-  pageSize: number
-) {
+export async function repoSearchWords(q: string, page: number, pageSize: number) {
   await wait(250);
 
   const qNorm = lowerKm(q);
-  if (!qNorm) return { items: [], total: 0 };
+
+  if (!qNorm) {
+    const all = [...WORDS].sort((a, b) => {
+      const alpha = khAlphabetCompare(a.term, b.term);
+      if (alpha !== 0) return alpha;
+
+      const la = lowerKm(a.term).length;
+      const lb = lowerKm(b.term).length;
+      if (la !== lb) return la - lb;
+
+      return lowerKm(a.term).localeCompare(lowerKm(b.term), "km");
+    });
+
+    const total = all.length;
+    const start = Math.max(0, (page - 1) * pageSize);
+    const items = all.slice(start, start + pageSize);
+    return { items, total };
+  }
 
   const isSingleConsonant = qNorm.length === 1 && KH_CONS.test(qNorm);
   const queryInitial: string | null = isSingleConsonant ? qNorm : null;
 
-  let scored = WORDS.map((w) => ({
-    w,
-    score: scoreWord(w, qNorm, queryInitial),
-  })).filter((x) => x.score > 0);
+  let scored = WORDS.map(w => ({ w, score: scoreWord(w, qNorm, queryInitial) }))
+                    .filter(x => x.score > 0);
 
   const WANT_MIN = 8;
   if (scored.length < WANT_MIN) {
     const qKey = phonemeKey(qNorm);
-    const fuzzy = WORDS.filter((w) => !scored.some((s) => s.w.id === w.id)) // avoid duplicates
-      .map((w) => {
-        const tKey = phonemeKey(w.term);
-        const d = lev(qKey, tKey);
-        return { w, d };
-      })
-      .filter((x) => x.d <= 2)
-      .map((x) => ({
-        w: x.w,
-        score: Math.max(1, 120 - x.d * 40),
-      }));
+    const fuzzy = WORDS
+      .filter(w => !scored.some(s => s.w.id === w.id))
+      .map(w => ({ w, d: lev(qKey, phonemeKey(w.term)) }))
+      .filter(x => x.d <= 2)
+      .map(x => ({ w: x.w, score: Math.max(1, 120 - x.d * 40) }));
     scored = scored.concat(fuzzy);
   }
 
   scored.sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
+
     if (queryInitial) {
       const vc = vowelComparator(a.w, b.w, queryInitial);
       if (vc !== 0) return vc;
     }
+
+    const alpha = khAlphabetCompare(a.w.term, b.w.term);
+    if (alpha !== 0) return alpha;
+
     const la = lowerKm(a.w.term).length;
     const lb = lowerKm(b.w.term).length;
     if (la !== lb) return la - lb;
+
     return lowerKm(a.w.term).localeCompare(lowerKm(b.w.term), "km");
   });
 
-  const filtered = scored.map((s) => s.w);
+  const filtered = scored.map(s => s.w);
   const total = filtered.length;
   const start = Math.max(0, (page - 1) * pageSize);
   const items = filtered.slice(start, start + pageSize);
   return { items, total };
 }
+
 
 export async function repoGetWord(id: string) {
   await wait(200);
