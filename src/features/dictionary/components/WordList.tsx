@@ -127,7 +127,7 @@ export default function WordList() {
                                 </p>
                             </button>
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 opacity-0">
                                 <button
                                     type="button"
                                     onClick={(e) => {
