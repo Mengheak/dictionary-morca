@@ -13,6 +13,8 @@ type Store = {
   isShowHeader: boolean;
   history: HistoryItem[];
   favoriteIds: string[];
+  isShowHistory: boolean;
+  isShowFavourite: boolean;
 
   setQuery: (q: string) => void;
   setPage: (p: number) => void;
@@ -21,8 +23,10 @@ type Store = {
   openDetails: () => void;
   closeDetails: () => void;
   pushHistory: (h: HistoryItem) => void;
-  hideHeader: MouseEventHandler<HTMLButtonElement>
-  showHeader: MouseEventHandler<HTMLButtonElement>
+  hideHeader: MouseEventHandler<HTMLButtonElement>;
+  showHeader: MouseEventHandler<HTMLButtonElement>;
+  toggleShowHistory: MouseEventHandler<HTMLButtonElement>;
+  toggleShowFavourite: MouseEventHandler<HTMLButtonElement>;
   toggleFavorite: (id: string) => void;
 };
 
@@ -35,18 +39,40 @@ export const useStore = create<Store>()(
       selectedWordId: null,
       isDetailsOpen: false,
       isShowHeader: true,
+      isShowHistory: false,
+      isShowFavourite: false,
       history: [],
       favoriteIds: [],
-
-      setQuery: (q) => set({ query: q, page: 1 }),
+      setQuery: (q) =>
+        set({
+          query: q,
+          page: 1,
+          isShowHistory: false,
+          isShowFavourite: false,
+        }),
       setPage: (p) => set({ page: p }),
       setPageSize: (n) => set({ pageSize: n, page: 1 }),
       setSelectedWordId: (id) => set({ selectedWordId: id }),
       openDetails: () => set({ isDetailsOpen: true }),
       closeDetails: () => set({ isDetailsOpen: false }),
       hideHeader: () => set({ isShowHeader: false }),
-      showHeader: () => set({isShowHeader: true}),
-      pushHistory: (h) => set({ history: [h, ...get().history].slice(0, 100) }),
+      showHeader: () => set({ isShowHeader: true }),
+      pushHistory: (h) =>
+        set((s) => {
+          if (s.history[0]?.id === h.id) return s;
+          const filtered = s.history.filter((x) => x.viewedAt !== h.viewedAt);
+          return { history: [h, ...filtered].slice(0, 100) };
+        }),
+      toggleShowHistory: () =>
+        set((state) => ({
+          isShowHistory: !state.isShowHistory,
+          isShowFavourite: false,
+        })),
+      toggleShowFavourite: () =>
+        set((state) => ({
+          isShowFavourite: !state.isShowFavourite,
+          isShowHistory: false,
+        })),
       toggleFavorite: (id) => {
         const has = get().favoriteIds.includes(id);
         set({

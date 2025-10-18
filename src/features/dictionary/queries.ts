@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchWordsMock, fetchWordByIdMock } from "./api.mock";
+import { fetchWordsMock, fetchWordByIdMock, fetchAllWords } from "./api.mock";
 import { wordKeys } from "./keys";
 import { useEffect, useState } from "react";
 
@@ -10,6 +10,13 @@ function useDebounced<T>(value: T, delay = 300) {
     return () => clearTimeout(t);
   }, [value, delay]);
   return v;
+}
+
+export const useAllWord = () => {
+  return useQuery({
+    queryKey: ['words'],
+    queryFn: () => fetchAllWords()
+  })
 }
 
 export function useWordList(q: string, page: number, pageSize: number) {

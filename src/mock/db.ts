@@ -866,3 +866,8 @@ export async function repoGetWord(id: string) {
   await wait(200);
   return WORDS.find((w) => w.id === id) ?? null;
 }
+
+export const getAllWord = async () => {
+  await wait(200)
+  return WORDS
+}

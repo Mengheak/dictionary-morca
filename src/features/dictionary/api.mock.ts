@@ -1,4 +1,4 @@
-import { repoSearchWords, repoGetWord, type Word } from "../../mock/db";
+import { repoSearchWords, repoGetWord, type Word, getAllWord } from "../../mock/db";
 
 export type WordListResponse = { items: Word[]; total: number };
 
@@ -12,4 +12,8 @@ export async function fetchWordsMock(
 
 export async function fetchWordByIdMock(id: string) {
   return repoGetWord(id);
+}
+
+export async function fetchAllWords() {
+  return getAllWord()
 }
