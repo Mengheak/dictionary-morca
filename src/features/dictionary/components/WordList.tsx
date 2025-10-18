@@ -9,7 +9,7 @@ export default function WordList() {
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
 
-    const {voiceId,  speak, speaking } = useTTS();
+    const { voiceId, speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
 
@@ -128,20 +128,18 @@ export default function WordList() {
                             </button>
 
                             <div className="flex items-center gap-2">
-                                {voiceId && (
-                                    <button
-                                        type="button"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleSpeak(w.term || "");
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity border px-2 py-1 rounded-lg text-slate-700 hover:bg-white hover:shadow-sm border-slate-300"
-                                        title="ស្តាប់"
-                                        aria-label={`ស្តាប់ ${w.term}`}
-                                    >
-                                        {speaking ? '⏹️' : '🔊'}
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSpeak(w.term || "");
+                                    }}
+                                    className=" border px-2 py-1 rounded-lg text-slate-700 hover:bg-white hover:shadow-sm border-slate-300"
+                                    title="ស្តាប់"
+                                    aria-label={`ស្តាប់ ${w.term}`}
+                                >
+                                    {speaking ? '⏹️' : '🔊'}
+                                </button>
 
                                 <svg className="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
