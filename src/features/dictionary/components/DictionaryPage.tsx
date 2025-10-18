@@ -8,9 +8,8 @@ export default function DictionaryPage() {
     const setQuery = useStore(s => s.setQuery);
     const IsOpen = useStore(s => s.isDetailsOpen)
     return (
-        <div className="space-y-4">
-            <h1 className="text-2xl font-semibold text-center text-yellow-700">វចនានុក្រមខ្មែរ</h1>
-
+        <div className="space-y-4 p-4">
+            <h1 className="text-2xl font-semibold text-center text-yellow-700 py-3">វចនានុក្រមខ្មែរ</h1>
             <div className="flex gap-3 items-center">
                 <input
                     value={query}

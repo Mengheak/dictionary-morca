@@ -31,7 +31,7 @@ export const useStore = create<Store>()(
     (set, get) => ({
       query: "",
       page: 1,
-      pageSize: 5,
+      pageSize: 10,
       selectedWordId: null,
       isDetailsOpen: false,
       isShowHeader: true,
