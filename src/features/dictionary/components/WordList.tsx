@@ -11,7 +11,7 @@ export default function WordList() {
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
 
-    const { supported, speak, speaking, stop, speakWord } = useTTS();
+    const { supported, speak, speaking, stop } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
     const [hasKmVoice, setHasKmVoice] = useState<boolean>(false);
