@@ -104,6 +104,7 @@ export default function WordList() {
                     <li
                         key={w.id}
                         className="px-6 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer transition-all duration-200 group overflwoys"
+                        onClick={() => { setSelectedWordId(w.id); openDetails(); }}
                     >
                         <div className="flex items-start justify-between gap-3">
                             <button
