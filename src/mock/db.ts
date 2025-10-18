@@ -1,5 +1,8 @@
-// Tiny in-memory "DB" + repo-like functions with paging + search.
-
+type TRelatedWord = {
+  term: string;
+  partOfSpeech: string;
+  meaning: string;
+};
 export type Word = {
   id: string;
   term: string;
@@ -7,7 +10,8 @@ export type Word = {
   partOfSpeech?: string;
   meaning: string;
   category?: "normal" | string;
-  singKhmer?: string; 
+  relatedWords?: TRelatedWord;
+  singKhmer?: string;
   examples?: string[];
   synonyms?: string[];
   audioUrl?: string;
@@ -48,8 +52,8 @@ const WORDS: Word[] = [
     partOfSpeech: "កិរិយា",
     category: "ព្រះរាជសព្ទ",
     singKhmer: "Saoy",
-    meaning: "ហូប, ទទួលទាន, ជាពាក្យសម្រាប់និយាយជាមួយស្ដេច",
-    examples: ["ព្រះអង្គសោយអាហារ"],
+    meaning: "ហូប, ទទួលទាន, ជាពាក្យសម្រាប់និយាយជាមួយស្ដេច។",
+    examples: ["ព្រះអង្គសោយអាហារ។"],
     synonyms: ["ហូប", "ស៊ី"],
   },
   {
@@ -95,7 +99,7 @@ const WORDS: Word[] = [
     singKhmer: "Yuet",
     meaning: "មានល្បឿនទាប ឬធ្វើដោយខានចុង។",
     examples: ["អ៊ីនធឺណិតយឺតធ្វើឱ្យការស្រាវជ្រាវពិបាក។"],
-    synonyms: ["ពន្យាពេល", "ឆ្ងាយពេល"],
+    synonyms: ["ពន្យាពេល", "យឺតយ៉ាវ"],
   },
   {
     id: "9",
@@ -113,7 +117,7 @@ const WORDS: Word[] = [
     singKhmer: "Bachek Vityea",
     meaning: "ចំណេះដឹង និងវិធីសាស្រ្តប្រើប្រាស់ឧបករណ៍ ដើម្បីដោះស្រាយបញ្ហា។",
     examples: ["បច្ចេកវិទ្យាឌីជីថលជួយពង្រីកការសិក្សាផ្ទាល់ខ្លួន។"],
-    synonyms: ["បច្ចេកទេស", "វិទ្យាសាស្រ្តប្រើប្រាស់"],
+    synonyms: ["បច្ចេកទេស", "វិទ្យាសាស្ត្រ​ប្រើប្រាស់"],
   },
   {
     id: "11",
@@ -131,7 +135,7 @@ const WORDS: Word[] = [
     singKhmer: "Mittapheap",
     meaning: "ទំនាក់ទំនងល្អៗរវាងមនុស្សដែលគ្នាគាំទ្រ និងគិតល្អ។",
     examples: ["មិត្តភាពពិតប្រាកដត្រូវការការគោរព និងជឿទុកចិត្ត។"],
-    synonyms: ["មិត្តភាពជិតស្និទ្ធ", "កម្តៅចិត្ត"],
+    synonyms: ["សម្ព័ន្ធភាព", "ភាពជាមិត្ត"],
   },
   {
     id: "13",
@@ -158,7 +162,7 @@ const WORDS: Word[] = [
     singKhmer: "Vochananukrom",
     meaning: "សៀវភៅ ឬមូលដ្ឋានទិន្នន័យដែលរួមបញ្ចូលពាក្យ និងន័យ។",
     examples: ["ខ្ញុំប្រើវចនានុក្រមដើម្បីរកន័យពាក្យ។"],
-    synonyms: ["ក្បួនពាក្យ", "និពន្ធន័យ"],
+    synonyms: ["ក្បួនពាក្យ", "វចនានុក្រមភាសា"],
   },
   {
     id: "16",
@@ -205,9 +209,472 @@ const WORDS: Word[] = [
     examples: ["ន័យពាក្យអាស្រ័យលើបរិបទដែលប្រើ។"],
     synonyms: ["ស្ថានភាពជុំវិញ", "បរិយាកាសអត្ថន័យ"],
   },
+
+  // ---------- More samples (monastic, royal, vowels, phonetic, audio) ----------
+
+  {
+    id: "22",
+    term: "បរិភោគ",
+    partOfSpeech: "កិរិយា",
+    category: "សង្ឃសព្ទ",
+    singKhmer: "Bori-phok",
+    meaning: "ទទួលទានអាហារ (សម្រាប់ព្រះសង្ឃ)។",
+    examples: ["ព្រះសង្ឃបរិភោគក្នុងពេលពេលព្រឹក។"],
+    synonyms: ["ទទួលទាន", "ស៊ី"],
+    audioUrl: "/audio/km/បរិភោគ.mp3",
+  },
+  {
+    id: "23",
+    term: "យាង",
+    partOfSpeech: "កិរិយា",
+    category: "សង្ឃសព្ទ",
+    singKhmer: "Yeang",
+    meaning: "ទៅ/ធ្វើដំណើរ (បែបគោរពសម្រាប់ព្រះសង្ឃ)។",
+    examples: ["ព្រះអង្គយាងទៅវត្តផ្សេង។"],
+    synonyms: ["ទៅ", "ដំណើរ"],
+  },
+  {
+    id: "24",
+    term: "ព្រះតម",
+    partOfSpeech: "នាម",
+    category: "សង្ឃសព្ទ",
+    singKhmer: "Preah Tam",
+    meaning: "ពាក្យគោរពសម្រាប់រាងកាយព្រះសង្ឃ/របស់ព្រះសង្ឃ (ប្រើខ្លះៗ)។",
+    examples: ["គេថែរក្សាព្រះតមឱ្យបានស្អាត។"],
+    synonyms: ["រាងកាយព្រះសង្ឃ"],
+  },
+  {
+    id: "25",
+    term: "ព្រះរាជក្រឹត្យ",
+    partOfSpeech: "នាម",
+    category: "ព្រះរាជសព្ទ",
+    singKhmer: "Preah Reacheakret",
+    meaning: "ឯកសារច្បាប់ចេញដោយព្រះមហាក្សត្រ។",
+    examples: ["ព្រះរាជក្រឹត្យត្រូវបានបោះពុម្ពផ្សាយ។"],
+    synonyms: ["ក្រឹត្យ", "បៀប័ន"],
+  },
+  {
+    id: "26",
+    term: "ទ្រង់",
+    partOfSpeech: "នាមសព្វនាម",
+    category: "ព្រះរាជសព្ទ",
+    singKhmer: "Trong",
+    meaning: "ពាក្យសម្ដែងទៅកាន់ព្រះមហាក្សត្រ ឬមហាក្សត្រី។",
+    examples: ["ទ្រង់បានមានព្រះរាជប្រកាស។"],
+    synonyms: ["ព្រះអង្គ"],
+  },
+  {
+    id: "27",
+    term: "កីឡា",
+    partOfSpeech: "នាម",
+    singKhmer: "Kila",
+    meaning: "សកម្មភាពកាយសម្ពាធសម្រាប់ការកំសាន្ត ឬប្រកួតប្រជែង។",
+    examples: ["កីឡាបាល់ទាត់ពេញនិយម។"],
+    synonyms: ["លំហាត់កាយ", "ការប្រកួត"],
+    audioUrl: "/audio/km/កីឡា.mp3",
+  },
+  {
+    id: "28",
+    term: "កិច្ចសន្យា",
+    partOfSpeech: "នាម",
+    singKhmer: "Keck San-nea",
+    meaning: "កិច្ចព្រមព្រៀងផ្លូវច្បាប់រវាងភាគីពីរឬច្រើន។",
+    examples: ["ត្រូវចុះកិច្ចសន្យាមុនចាប់ផ្តើមការងារ។"],
+    synonyms: ["កិច្ចព្រមព្រៀង", "កិច្ចព្រមព្រៀងសរសេរ"],
+  },
+  {
+    id: "29",
+    term: "កែ",
+    partOfSpeech: "កិរិយា",
+    singKhmer: "Kae",
+    meaning: "ធ្វើឱ្យត្រឹមត្រូវ ឬផ្លាស់ប្តូរឲ្យល្អឡើង។",
+    examples: ["សូមកែកំហុសក្នុងអត្ថបទនេះ។"],
+    synonyms: ["កែប្រែ", "កែតម្រូវ"],
+  },
+  {
+    id: "30",
+    term: "កុមារ",
+    partOfSpeech: "នាម",
+    singKhmer: "Komar",
+    meaning: "ក្មេងប្រុស ឬក្មេងស្រីដែលមានអាយុក្មេង។",
+    examples: ["កុមារត្រូវបានថែទាំល្អនៅសាលា។"],
+    synonyms: ["កូនក្មេង", "កុមារភាព"],
+  },
+  {
+    id: "31",
+    term: "កូន",
+    partOfSpeech: "នាម",
+    singKhmer: "Kon",
+    meaning: "ពូជពង្ស ឬក្មេងដែលជាកូនរបស់មាតាបិតា។",
+    examples: ["គាត់មានកូនពីរនាក់។"],
+    synonyms: ["កូនចៅ"],
+  },
+  {
+    id: "32",
+    term: "កេរ្តិ៍",
+    partOfSpeech: "នាម",
+    singKhmer: "Ker",
+    meaning: "កេរ្តិ៍ឈ្មោះ ឬកេរ្តិ៍ដំណែល។",
+    examples: ["គាត់រក្សាកេរ្តិ៍របស់គ្រួសារ។"],
+    synonyms: ["កេរ្តិ៍ឈ្មោះ", "ឈ្មោះល្បី"],
+  },
+  {
+    id: "33",
+    term: "កោរ",
+    partOfSpeech: "កិរិយា",
+    singKhmer: "Kor",
+    meaning: "កាត់សក់ ឬដុះសក់ចេញ។",
+    examples: ["ព្រះសង្ឃកោរសក់ជាប្រចាំ។"],
+    synonyms: ["កាត់សក់"],
+  },
+  {
+    id: "34",
+    term: "កៅអី",
+    partOfSpeech: "នាម",
+    singKhmer: "Kao Ei",
+    meaning: "វត្ថុសម្រាប់អង្គុយ។",
+    examples: ["សូមយកកៅអីមកមួយ។"],
+    synonyms: ["កៅអីអង្គុយ", "កាឡែងអង្គុយ"],
+  },
+  {
+    id: "35",
+    term: "កើត",
+    partOfSpeech: "កិរិយា",
+    singKhmer: "Koet",
+    meaning: "មានលេចឡើង ឬកើតមាន។",
+    examples: ["គាត់កើតនៅខេត្តបាត់ដំបង។"],
+    synonyms: ["លេចឡើង", "បង្កើត"],
+  },
+  {
+    id: "36",
+    term: "ជឿ",
+    partOfSpeech: "កិរិយា",
+    singKhmer: "Chue",
+    meaning: "មានការជឿជាក់ ឬទុកចិត្ត។",
+    examples: ["យើងត្រូវជឿលើខ្លួនឯង។"],
+    synonyms: ["ទុកចិត្ត", "ជឿជាក់"],
+  },
+  {
+    id: "37",
+    term: "ឧត្តមភាព",
+    partOfSpeech: "នាម",
+    singKhmer: "Uttamapheap",
+    meaning: "ភាពខ្ពង់ខ្ពស់ ឬល្អឥតខ្ចោះជាង។",
+    examples: ["គោលបំណងគឺស្វែងរកឧត្តមភាពក្នុងការងារ។"],
+    synonyms: ["ភាពល្អឥតខ្ចោះ", "កម្រិតខ្ពស់"],
+  },
+  {
+    id: "38",
+    term: "បង្គំ",
+    partOfSpeech: "កិរិយា",
+    category: "សង្ឃសព្ទ",
+    singKhmer: "Bangkom",
+    meaning: "ស្នាក់នៅ ឬសម្រាក (ប្រើសម្រាប់ព្រះសង្ឃ/បែបគោរព)។",
+    examples: ["ព្រះសង្ឃបង្គំនៅវត្តនោះ។"],
+    synonyms: ["ស្នាក់នៅ", "សម្រាក"],
+  },
+  {
+    id: "39",
+    term: "ព្រះរាជពិធី",
+    partOfSpeech: "នាម",
+    category: "ព្រះរាជសព្ទ",
+    singKhmer: "Preah Reach Pithi",
+    meaning: "ពិធីការដែលធ្វើក្នុងរាជវាំង ឬពាក់ព័ន្ធនឹងព្រះមហាក្សត្រ។",
+    examples: ["ព្រះរាជពិធីត្រូវបានរៀបចំយ៉ាងទាន់សម័យ។"],
+    synonyms: ["ពិធីរាជការ"],
+  },
+  {
+    id: "40",
+    term: "ការសិក្សា",
+    partOfSpeech: "នាម",
+    singKhmer: "Kar Siksaa",
+    meaning: "ដំណើរការរៀន និងស្វែងយល់ចំណេះដឹង។",
+    examples: ["ការសិក្សាជួយបង្កើនឱកាសការងារ។"],
+    synonyms: ["សិក្សា", "អប់រំ"],
+  },
 ];
 
 const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+const ZWSP = /\u200B|\u200C|\u200D|\u2060/g;
+function normKm(s: string) {
+  return (s ?? "").normalize("NFC").replace(ZWSP, "").trim();
+}
+function lowerKm(s: string) {
+  return normKm(s).toLowerCase();
+}
+function tokens(q: string) {
+  return lowerKm(q).split(/\s+/).filter(Boolean);
+}
+
+const KH_CONS = /[\u1780-\u17A2]/;
+const KH_DEP = /[\u17B6-\u17D3\u17DD]/;
+const KH_SIGN = /[\u17C6-\u17D3\u17DD]/;
+const KH_VOWEL_ONLY = /[\u17B6-\u17C5\u17BE-\u17C1\u17C4\u17C5]/;
+
+const VOWEL_ORDER = [
+  "ា",
+  "ិ",
+  "ី",
+  "ឹ",
+  "ឺ",
+  "ុ",
+  "ូ",
+  "ួ",
+  "េ",
+  "ែ",
+  "ៃ",
+  "ោ",
+  "ៅ",
+  "ៀ",
+  "ឿ",
+  "ើ",
+] as const;
+const VOWEL_INDEX = new Map(VOWEL_ORDER.map((v, i) => [v, i]));
+
+function firstConsonant(s: string): string {
+  const m = s.match(KH_CONS);
+  return m ? m[0] : "";
+}
+function firstDependentVowel(s: string): string {
+  const m = s.match(KH_VOWEL_ONLY);
+  return m ? m[0] : "";
+}
+
+function splitKCC(input: string): string[] {
+  const s = normKm(input);
+  const out: string[] = [];
+  let cluster = "";
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+
+    if (KH_CONS.test(ch)) {
+      if (cluster) out.push(cluster);
+      cluster = ch;
+      continue;
+    }
+
+    if (KH_DEP.test(ch) || KH_SIGN.test(ch)) {
+      cluster += ch;
+      continue;
+    }
+
+    if (cluster) {
+      out.push(cluster);
+      cluster = "";
+    }
+    if (!/\s/.test(ch)) {
+      out.push(ch);
+    }
+  }
+  if (cluster) out.push(cluster);
+  return out.filter(Boolean);
+}
+
+// ---------- Category hints ----------
+const royalHint = (q: string) => /ព្រះ|រាជ|ម្ចាស់/.test(q);
+const monkHint = (q: string) =>
+  /សង្ឃ|ភិក្ខុ|ព្រះសង្ឃ|សមណ|វត្ត|ធម៌|សាសនា/.test(q);
+
+const PHONEME_MAP: Record<string, string> = {
+  // Consonants (rough categories)
+  ក: "k",
+  ខ: "kh",
+  គ: "k",
+  ឃ: "kh",
+  ង: "ng",
+  ច: "ch",
+  ឆ: "chh",
+  ជ: "ch",
+  ឈ: "chh",
+  ញ: "nh",
+  ដ: "d",
+  ឋ: "th",
+  ឌ: "d",
+  ឍ: "th",
+  ណ: "n",
+  ត: "t",
+  ថ: "th",
+  ទ: "t",
+  ធ: "th",
+  ន: "n",
+  ប: "b",
+  ផ: "ph",
+  ព: "p",
+  ភ: "ph",
+  ម: "m",
+  យ: "y",
+  រ: "r",
+  ល: "l",
+  វ: "v",
+  ស: "s",
+  ហ: "h",
+  ឡ: "l",
+  អ: "a",
+  ឣ: "a",
+  ឤ: "a",
+
+  "ា": "aa",
+  "ិ": "i",
+  "ី": "ii",
+  "ឹ": "oe",
+  "ឺ": "oe",
+  "ុ": "u",
+  "ូ": "uu",
+  "ួ": "ua",
+  "េ": "e",
+  "ែ": "ae",
+  "ៃ": "ai",
+  "ោ": "o",
+  "ៅ": "au",
+  "ៀ": "ia",
+  "ឿ": "ue",
+  "ើ": "oe",
+  "ំ": "m",
+  "ះ": "h",
+  "៉": "",
+  "៊": "",
+  "់": "",
+  "៌": "r",
+  "៍": "",
+  "័": "",
+  "៎": "",
+  "៍ំ": "m",
+};
+
+function phonemeKey(str: string): string {
+  const kccs = splitKCC(str);
+  let out = "";
+  for (const kcc of kccs) {
+    for (const ch of kcc) {
+      out += PHONEME_MAP[ch] ?? ch;
+    }
+    out += "-";
+  }
+  return out.replace(/-+$/, "");
+}
+
+function lev(a: string, b: string): number {
+  const m = a.length,
+    n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+  const dp = Array.from({ length: m + 1 }, (_) => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+function scoreWord(
+  w: Word,
+  qNorm: string,
+  queryInitial?: string | null
+): number {
+  const tks = tokens(qNorm);
+
+  const termRaw = w.term;
+  const term = lowerKm(termRaw);
+  const meaning = lowerKm(w.meaning);
+  const sing = lowerKm(w.singKhmer ?? "");
+  const syns = (w.synonyms ?? []).map(lowerKm);
+
+  let score = 0;
+
+  if (term === qNorm) score += 2000;
+  for (const tk of tks) {
+    if (term === tk) score += 400;
+    else if (term.startsWith(tk)) score += 260;
+    else {
+      const pos = term.indexOf(tk);
+      if (pos >= 0) score += 180 - Math.min(pos, 120) * 0.6;
+    }
+  }
+
+  if (queryInitial && firstConsonant(termRaw) === queryInitial) score += 240;
+
+  for (const tk of tks) {
+    if (meaning.startsWith(tk)) score += 120;
+    else {
+      const pos = meaning.indexOf(tk);
+      if (pos >= 0) score += 90 - Math.min(pos, 160) * 0.3;
+    }
+  }
+
+  for (const tk of tks) {
+    if (sing.startsWith(tk)) score += 80;
+    else if (sing.includes(tk)) score += 55;
+  }
+
+  for (const syn of syns) {
+    for (const tk of tks) {
+      if (syn === tk) score += 100;
+      else if (syn.startsWith(tk)) score += 70;
+      else if (syn.includes(tk)) score += 45;
+    }
+  }
+
+  score += Math.max(0, 40 - Math.min(term.length, 40));
+
+  if (
+    (w.category === "ព្រះរាជសព្ទ" || w.category === "រាជសព្ទ") &&
+    royalHint(qNorm)
+  )
+    score += 80;
+  if (w.category === "សង្ឃសព្ទ" && monkHint(qNorm)) score += 80;
+
+  return score;
+}
+
+export type TKhVowels =
+  | "ា"
+  | "ិ"
+  | "ី"
+  | "ឹ"
+  | "ឺ"
+  | "ុ"
+  | "ូ"
+  | "ួ"
+  | "ើ"
+  | "ឿ"
+  | "ៀ"
+  | "េ"
+  | "ែ"
+  | "ៃ"
+  | "ោ"
+  | "ៅ";
+
+function vowelComparator(a: Word, b: Word, queryInitial: string | null) {
+  if (!queryInitial) return 0;
+
+  const aStarts = firstConsonant(a.term) === queryInitial;
+  const bStarts = firstConsonant(b.term) === queryInitial;
+  if (aStarts && !bStarts) return -1;
+  if (!aStarts && bStarts) return 1;
+  if (!aStarts && !bStarts) return 0;
+
+  const va = firstDependentVowel(a.term) as TKhVowels;
+  const vb = firstDependentVowel(b.term) as TKhVowels;
+
+  const ia = VOWEL_INDEX.has(va) ? (VOWEL_INDEX.get(va) as number) : -1;
+  const ib = VOWEL_INDEX.has(vb) ? (VOWEL_INDEX.get(vb) as number) : -1;
+
+  if (ia !== ib) return ia - ib;
+  // tie-breakers
+  const la = lowerKm(a.term).length;
+  const lb = lowerKm(b.term).length;
+  if (la !== lb) return la - lb;
+  return lowerKm(a.term).localeCompare(lowerKm(b.term), "km");
+}
 
 export async function repoSearchWords(
   q: string,
@@ -215,24 +682,50 @@ export async function repoSearchWords(
   pageSize: number
 ) {
   await wait(250);
-  const query = q.trim().toLowerCase();
-  const filtered = query
-    ? WORDS.filter((w) => {
-        const term = w.term.toLowerCase();
-        const meaning = w.meaning.toLowerCase();
-        const sing = (w.singKhmer ?? "").toLowerCase();
-        const syns = (w.synonyms ?? []).map((s) => s.toLowerCase());
-        return (
-          term.includes(query) ||
-          meaning.includes(query) ||
-          sing.includes(query) ||
-          syns.some((s) => s.includes(query))
-        );
-      })
-    : [];
 
+  const qNorm = lowerKm(q);
+  if (!qNorm) return { items: [], total: 0 };
+
+  const isSingleConsonant = qNorm.length === 1 && KH_CONS.test(qNorm);
+  const queryInitial: string | null = isSingleConsonant ? qNorm : null;
+
+  let scored = WORDS.map((w) => ({
+    w,
+    score: scoreWord(w, qNorm, queryInitial),
+  })).filter((x) => x.score > 0);
+
+  const WANT_MIN = 8;
+  if (scored.length < WANT_MIN) {
+    const qKey = phonemeKey(qNorm);
+    const fuzzy = WORDS.filter((w) => !scored.some((s) => s.w.id === w.id)) // avoid duplicates
+      .map((w) => {
+        const tKey = phonemeKey(w.term);
+        const d = lev(qKey, tKey);
+        return { w, d };
+      })
+      .filter((x) => x.d <= 2)
+      .map((x) => ({
+        w: x.w,
+        score: Math.max(1, 120 - x.d * 40),
+      }));
+    scored = scored.concat(fuzzy);
+  }
+
+  scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (queryInitial) {
+      const vc = vowelComparator(a.w, b.w, queryInitial);
+      if (vc !== 0) return vc;
+    }
+    const la = lowerKm(a.w.term).length;
+    const lb = lowerKm(b.w.term).length;
+    if (la !== lb) return la - lb;
+    return lowerKm(a.w.term).localeCompare(lowerKm(b.w.term), "km");
+  });
+
+  const filtered = scored.map((s) => s.w);
   const total = filtered.length;
-  const start = (page - 1) * pageSize;
+  const start = Math.max(0, (page - 1) * pageSize);
   const items = filtered.slice(start, start + pageSize);
   return { items, total };
 }

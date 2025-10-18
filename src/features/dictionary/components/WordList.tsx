@@ -1,6 +1,7 @@
 import { useStore } from '../../../lib/store';
 import { useWordList } from '../queries';
 import { useTTS } from '../../../lib/useTTS';
+import { useEffect, useState } from 'react';
 
 export default function WordList() {
     const q = useStore(s => s.query);
@@ -10,9 +11,20 @@ export default function WordList() {
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
 
-    const { supported, speak, speaking, stop } = useTTS('km-KH');
+    const { supported, speak, speaking, stop, speakWord } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
+    const [hasKmVoice, setHasKmVoice] = useState<boolean>(false);
+    useEffect(() => {
+        if (!('speechSynthesis' in window)) return;
+        const check = () => {
+            const vs = window.speechSynthesis.getVoices();
+            setHasKmVoice(vs.some(v => (v.lang || '').toLowerCase().startsWith('km')));
+        };
+        check();
+        window.speechSynthesis.onvoiceschanged = check;
+    }, []);
+    console.log(hasKmVoice)
     if (!q.trim()) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -71,7 +83,7 @@ export default function WordList() {
         if (speaking) {
             stop();
         } else {
-            speak(singKhmer);
+            speak(singKhmer)
         }
     };
 
@@ -157,8 +169,8 @@ export default function WordList() {
                 <div className="flex items-center justify-between">
                     <button
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${page === 1
-                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 shadow-sm hover:shadow'
+                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                            : 'bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 shadow-sm hover:shadow'
                             }`}
                         onClick={() => setPage(Math.max(1, page - 1))}
                         disabled={page === 1}
@@ -175,8 +187,8 @@ export default function WordList() {
 
                     <button
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${!hasNextPage
-                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 shadow-sm hover:shadow'
+                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                            : 'bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 shadow-sm hover:shadow'
                             }`}
                         onClick={() => setPage(page + 1)}
                         disabled={!hasNextPage}

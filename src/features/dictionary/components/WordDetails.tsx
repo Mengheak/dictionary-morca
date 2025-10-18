@@ -20,7 +20,7 @@ export default function WordDetails() {
             <div className="flex items-center justify-center h-64 text-slate-400">
                 <div className="text-center space-y-2">
                     <div className="text-4xl">📖</div>
-                    <div className="text-sm font-medium">Select a word to see details</div>
+                    <div className="text-sm font-medium">រើសពាក្យមួយដើម្បីបង្ហាញ</div>
                 </div>
             </div>
         );
@@ -31,7 +31,7 @@ export default function WordDetails() {
             <div className="flex items-center justify-center h-64">
                 <div className="space-y-3 text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                    <div className="text-sm text-slate-500">Loading details…</div>
+                    <div className="text-sm text-slate-500">សូមរង់ចាំ...</div>
                 </div>
             </div>
         );
@@ -42,7 +42,7 @@ export default function WordDetails() {
             <div className="flex items-center justify-center h-64">
                 <div className="text-center space-y-2">
                     <div className="text-4xl">❌</div>
-                    <div className="text-sm font-medium text-slate-600">Word not found</div>
+                    <div className="text-sm font-medium text-slate-600">រកមិនឃើញពាក្យ</div>
                 </div>
             </div>
         );

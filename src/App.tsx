@@ -12,7 +12,7 @@ export default function App() {
       <MainHeader />
       <main>
         <DictionaryBackground />
-        <article className='p-10'>
+        <article className='sm:p-2 md:p-5'>
           <DictionaryPage />
         </article>
       </main>
