@@ -1,4 +1,4 @@
-import { repoSearchWords, repoGetWord, type Word, getAllWord } from "../../mock/db";
+import { repoSearchWords, repoGetWord, type Word } from "../../mock/db";
 
 export type WordListResponse = { items: Word[]; total: number };
 
