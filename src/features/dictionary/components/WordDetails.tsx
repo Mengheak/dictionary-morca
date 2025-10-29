@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useWordDetail } from '../queries';
+import { useWordDetails } from '../queries';
 import { useStore } from '../../../lib/store';
 
 export default function WordDetails() {
@@ -9,7 +9,7 @@ export default function WordDetails() {
     const pushHistory = useStore(s => s.pushHistory);
     const toggleFavorite = useStore(s => s.toggleFavorite);
     const favoriteIds = useStore(s => s.favoriteIds);
-    const { data: word, isLoading } = useWordDetail(id)
+    const { data: word, isLoading } = useWordDetails(id || "")
     const setQuery = useStore(s => s.setQuery);;
     useEffect(() => {
         if (word) pushHistory({ id: word.id, term: word.term, viewedAt: Date.now() });
@@ -61,9 +61,9 @@ export default function WordDetails() {
                             <div className="text-slate-600 text-lg italic mb-1">{word.phonetic}</div>
                         )}
                         <span className='flex gap-3'>
-                            {word.partOfSpeech && (
+                            {word.part_of_speech && (
                                 <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
-                                    {word.partOfSpeech}
+                                    {word?.part_of_speech}
                                 </span>
                             )}
                             {
@@ -117,7 +117,7 @@ export default function WordDetails() {
                     </div>
                 ) : null}
                 {
-                    word.relatedWords?.length && (
+                    word.related_words?.length && (
                         <div className="space-y-4">
                             <h3 className='text-lg font-bold text-slate-900 flex items-center gap-2'>
                                 <img src='./related-icon.svg' width={24} />
@@ -125,7 +125,7 @@ export default function WordDetails() {
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {word.relatedWords?.map((related, idx) => (
+                                {word.related_words?.map((related, idx) => (
                                     <section
                                         key={idx}
                                         className="group relative rounded-lg border border-purple-200/60 bg-gradient-to-br overflow-hidden text-left p-4"

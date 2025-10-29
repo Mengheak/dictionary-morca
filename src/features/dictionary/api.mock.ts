@@ -14,6 +14,3 @@ export async function fetchWordByIdMock(id: string) {
   return repoGetWord(id);
 }
 
-export async function fetchAllWords() {
-  return getAllWord()
-}

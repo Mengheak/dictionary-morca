@@ -1,4 +1,5 @@
 import { useStore } from "../../../lib/store";
+import { useAllWords } from "../queries";
 import FavoritePage from "./FavoritePage";
 import HistoryPage from "./HistoryPage";
 import WordDetails from "./WordDetails";
@@ -13,6 +14,8 @@ export default function DictionaryPage() {
     const isShowHistory = useStore(s => s.isShowHistory)
     const isShowFavourite = useStore(s => s.isShowFavourite)
     const toggleShowFavourite = useStore(s => s.toggleShowFavourite)
+    const allwords = useAllWords().data
+    console.table(allwords)
     return (
         <div className="space-y-4 p-4">
             <h1 className="text-2xl font-semibold text-center text-yellow-700 py-3">វចនានុក្រមខ្មែរ</h1>

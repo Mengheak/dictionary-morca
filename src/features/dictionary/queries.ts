@@ -1,7 +1,7 @@
+// src/features/dictionary/queries.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchWordsMock, fetchWordByIdMock, fetchAllWords } from "./api.mock";
-import { wordKeys } from "./keys";
 import { useEffect, useState } from "react";
+import { fetchAllWords, fetchWordDetails, searchWords } from "../../lib/api";
 
 function useDebounced<T>(value: T, delay = 300) {
   const [v, setV] = useState(value);
@@ -12,29 +12,39 @@ function useDebounced<T>(value: T, delay = 300) {
   return v;
 }
 
-export const useAllWord = () => {
-  return useQuery({
-    queryKey: ['words'],
-    queryFn: () => fetchAllWords()
-  })
-}
-
 export function useWordList(q: string, page: number, pageSize: number) {
   const dq = useDebounced(q, 300);
+
   return useQuery({
-    queryKey: wordKeys.list(dq, page, pageSize),
-    queryFn: () => fetchWordsMock(dq, page, pageSize),
+    queryKey: ["dictionary-search", dq, page, pageSize],
+    queryFn: () => searchWords(dq),
     enabled: dq.trim().length > 0,
     placeholderData: (previousData) => previousData,
     staleTime: 60_000,
+    select: (res) => {
+      const items = res.data || [];
+      return {
+        items,
+        total: items.length, // if API doesn’t return total count
+      };
+    },
   });
 }
 
-export function useWordDetail(id: string | null) {
+export function useAllWords() {
   return useQuery({
-    queryKey: id ? wordKeys.detail(id) : ["noop"],
-    queryFn: () => fetchWordByIdMock(id!),
-    enabled: !!id,
-    staleTime: 5 * 60_000,
+    queryKey: ["all-words"], 
+    queryFn: fetchAllWords, 
+    staleTime: 5 * 60_000, 
+    select: (res) => res, 
+  });
+}
+export function useWordDetails(id: string | null) {
+  return useQuery({
+    queryKey: ["word-details", id],
+    queryFn: () => fetchWordDetails(id!),
+    enabled: !!id,             // only run when an ID exists
+    staleTime: 5 * 60_000,     // cache fresh for 5 minutes
+    select: (res) => res.data, // extract the data object directly
   });
 }
