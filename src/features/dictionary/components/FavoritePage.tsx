@@ -7,7 +7,7 @@ export default function FavoritePage() {
   const favoriteIds = useStore((s) => s.favoriteIds);
   const toggleFavorite = useStore((s) => s.toggleFavorite);
   const setQuery = useStore(s => s.setQuery)
-  const allWords = useAllWords().data
+  const allWords = useAllWords().data?.data
 
   const favWords = useMemo(
     () => allWords?.filter((w) => favoriteIds.includes(w.id)),
