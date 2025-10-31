@@ -14,11 +14,11 @@ export default function WordList() {
 
     if (!q.trim()) {
         return (
-            <div className="flex items-center justify-center h-64 text-slate-400">
+            <div className="flex items-center justify-center h-64 text-white">
                 <div className="text-center space-y-3 flex flex-col items-center justify-center">
                     <div className="text-5xl" aria-hidden><svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></div>
-                    <div className="text-slate-500 font-medium">សូមវាយពាក្យដើម្បីស្វែងរក</div>
-                    <div className="text-sm text-slate-400">បញ្ចូលពាក្យដើម្បីមើលន័យ</div>
+                    <div className="text-gray-300 font-medium">សូមវាយពាក្យដើម្បីស្វែងរក</div>
+                    <div className="text-sm text-white">បញ្ចូលពាក្យដើម្បីមើលន័យ</div>
                 </div>
             </div>
         );
@@ -29,7 +29,7 @@ export default function WordList() {
             <div className="flex items-center justify-center h-64" role="status" aria-live="polite">
                 <div className="space-y-3 text-center">
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-                    <div className="text-sm text-slate-500">កំពុងស្វែងរក…</div>
+                    <div className="text-sm text-white">កំពុងស្វែងរក…</div>
                 </div>
             </div>
         );
@@ -40,8 +40,8 @@ export default function WordList() {
             <div className="flex items-center justify-center h-64">
                 <div className="text-center space-y-3">
                     <div className="text-5xl" aria-hidden>📭</div>
-                    <div className="text-slate-600 font-medium">មិនមានលទ្ធផល</div>
-                    <div className="text-sm text-slate-400">សាកល្បងពាក្យផ្សេងទៀត</div>
+                    <div className="text-gray-300 font-medium">មិនមានលទ្ធផល</div>
+                    <div className="text-sm text-white">សាកល្បងពាក្យផ្សេងទៀត</div>
                 </div>
             </div>
         );
@@ -88,11 +88,11 @@ export default function WordList() {
                         ) : (
                             <span className="flex items-center gap-2">
                                 <span className="text-blue-600">{data.total}</span>
-                                <span className="text-slate-500">លទ្ធផល</span>
+                                <span className="text-white">លទ្ធផល</span>
                             </span>
                         )}
                     </div>
-                    <div className="text-xs text-slate-500 bg-white px-3 py-1 rounded-full border border-slate-200">
+                    <div className="text-xs text-white bg-white px-3 py-1 rounded-full border border-slate-200">
                         ទំព័រ {page} / {totalPages}
                     </div>
                 </div>
@@ -117,7 +117,7 @@ export default function WordList() {
                                         {w.term}
                                     </span>
                                     {w.phonetic && (
-                                        <span className="text-sm text-slate-500 italic">{w.phonetic}</span>
+                                        <span className="text-sm text-white italic">{w.phonetic}</span>
                                     )}
                                     {renderCategory(w.category)}
                                 </div>

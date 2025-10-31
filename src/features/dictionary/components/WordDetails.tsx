@@ -18,7 +18,7 @@ export default function WordDetails() {
     }, [word, pushHistory]);
     if (!isOpen) {
         return (
-            <div className="flex items-center justify-center h-64 text-slate-400">
+            <div className="flex items-center justify-center h-64 text-white">
                 <div className="text-center space-y-2 flex items-center justify-center flex-col">
                     <div className="text-4xl"><svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-book-open-text-icon lucide-book-open-text"><path d="M12 7v14"/><path d="M16 12h2"/><path d="M16 8h2"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/><path d="M6 12h2"/><path d="M6 8h2"/></svg></div>
                     <div className="text-sm font-medium">រើសពាក្យមួយដើម្បីបង្ហាញ</div>
@@ -43,7 +43,7 @@ export default function WordDetails() {
             <div className="flex items-center justify-center h-64">
                 <div className="text-center space-y-2">
                     <div className="text-4xl">❌</div>
-                    <div className="text-sm font-medium text-slate-600">រកមិនឃើញពាក្យ</div>
+                    <div className="text-sm font-medium text-white">រកមិនឃើញពាក្យ</div>
                 </div>
             </div>
         );
@@ -79,13 +79,13 @@ export default function WordDetails() {
                     <div className="flex gap-2 flex-shrink-0">
                         <button
                             className={`${isFav
-                                ? 'bg-yellow-400 text-yellow-900 border-yellow-500 hover:bg-yellow-500'
+                                ? 'border-[#0088cc] bg-[#0088cc]/10 text-[#0088cc]'
                                 : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                                 } border-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow flex items-center gap-1.5`}
                             onClick={() => toggleFavorite(word.id)}
                         >
                             <span className="text-lg">{isFav ? '★' : '☆'}</span>
-                            <span className="hidden sm:inline">{isFav ? 'Favorited' : 'Favorite'}</span>
+                            <span className="hidden sm:inline">{isFav ? 'បានចូលចិត្ត' : 'ចូលចិត្ត'}</span>
                         </button>
                         <button
                             className="bg-white text-slate-700 border-2 border-slate-300 px-4 py-2 rounded-lg font-medium hover:bg-slate-50 transition-all duration-200 shadow-sm hover:shadow"

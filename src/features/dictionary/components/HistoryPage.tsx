@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../../../lib/store";
+import { useSearchParams } from "react-router-dom";
 
 function formatDate(d: Date) {
     return d.toLocaleDateString(undefined, {
@@ -25,7 +26,7 @@ export default function HistoryPage() {
     const setQuery = useStore(s => s.setQuery)
     const [q, setQ] = useState("");
     const [sort, setSort] = useState<SortMode>("recent");
-
+    const setParams = useSearchParams()[1]
     const filtered = useMemo(() => {
         const base = q.trim()
             ? history.filter((h) =>
@@ -60,14 +61,14 @@ export default function HistoryPage() {
             <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
                 <div className="sticky top-0 z-20 mb-8 bg-white/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 shadow-lg p-5">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <h1 className="inline-flex flex-wrap items-center gap-2 text-xl text-blue-400 sm:text-2xl font-bold">
+                        <h1 className="inline-flex flex-wrap items-center gap-2 text-xl text-[#062C6B] sm:text-2xl font-bold">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="28"
                                 height="28"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="rgb(96 165 250 / 1)"
+                                stroke="#062C6B"
                                 strokeWidth="2"
                                 className="shrink-0"
                                 aria-hidden="true"
@@ -131,7 +132,7 @@ export default function HistoryPage() {
                 ) : filtered.length === 0 ? (
                     <div className="rounded-2xl border-2 border-dashed border-slate-300 bg-white/50 p-12 text-center">
                         <div className="text-6xl mb-3">🔎</div>
-                        <p className="text-slate-600 font-medium">
+                        <p className="text-gray-200 font-medium">
                             រកមិនឃើញសម្រាប់ <span className="text-blue-600">"{q}"</span>
                         </p>
                     </div>
@@ -140,7 +141,7 @@ export default function HistoryPage() {
                         {sections.map(([dateLabel, items]) => (
                             <section key={dateLabel}>
                                 <div className="flex items-center gap-3 mb-4">
-                                    <h2 className="text-sm font-bold tracking-widest text-slate-700 uppercase">
+                                    <h2 className="text-sm font-bold tracking-widest text-gray-300 uppercase">
                                         {dateLabel}
                                     </h2>
                                     <div className="flex-1 h-px bg-gradient-to-r from-slate-300 to-transparent"></div>
@@ -157,13 +158,15 @@ export default function HistoryPage() {
                                             <li
                                                 key={`${h.id}-${h.viewedAt}`}
                                                 className="group relative rounded-xl border border-slate-200/60 bg-white/80 backdrop-blur-sm hover:border-blue-300/60 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 overflow-hidden"
-                                                onClick={() => setQuery(h.term)}
+                                                onClick={() => {
+                                                    setQuery(h.term);
+                                                    setParams({ q: h.term });
+                                                }}
                                             >
-                                                {/* Background glow effect */}
-                                                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/50 group-hover:to-indigo-50/50 transition-all duration-300 pointer-events-none"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/60 group-hover:to-indigo-50/60 transition-all duration-300 pointer-events-none"></div>
 
-                                                <div className="relative p-4 space-y-3">
-                                                    {/* Top section: Icon and term */}
+                                                <div className="relative p-5 space-y-3">
+                                                    {/* Header */}
                                                     <div className="flex items-start gap-3">
                                                         <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-600 group-hover:shadow-md transition-all">
                                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -181,23 +184,24 @@ export default function HistoryPage() {
                                                         </div>
                                                     </div>
 
-                                                    {/* Favorite badge */}
                                                     {isFav && (
-                                                        <div className="flex items-center gap-1.5 w-fit rounded-full bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 border border-amber-200/50">
-                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-amber-500">
+                                                        <div className="flex items-center gap-1.5 w-fit rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-1 border border-blue-200/50">
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-blue-500">
                                                                 <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" />
                                                             </svg>
-                                                            <span className="text-xs font-semibold text-amber-700">Favorite</span>
+                                                            <span className="text-xs font-semibold text-blue-700">បានចូលចិត្ត</span>
                                                         </div>
                                                     )}
 
-                                                    {/* Action buttons */}
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                                         <button
-                                                            onClick={() => toggleFavorite(h.id)}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation(); // prevent navigation
+                                                                toggleFavorite(h.id);
+                                                            }}
                                                             className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-medium text-sm transition-all ${isFav
-                                                                ? 'bg-amber-50 text-amber-600 border border-amber-200/60 hover:bg-amber-100'
-                                                                : 'bg-slate-50 text-slate-600 border border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200'
+                                                                    ? "bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100"
+                                                                    : "bg-slate-50 text-slate-600 border border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200"
                                                                 }`}
                                                             title={isFav ? "Remove from favorites" : "Add to favorites"}
                                                         >
@@ -217,9 +221,13 @@ export default function HistoryPage() {
                                                                 </>
                                                             )}
                                                         </button>
+
                                                         <button
-                                                            onClick={() => removeOne(h.id)}
-                                                            className="flex items-center justify-center p-2 rounded-lg bg-red-50 text-red-600 border border-red-200/60 hover:bg-red-100 transition-all"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                removeOne(h.id);
+                                                            }}
+                                                            className="flex items-center justify-center p-2 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all"
                                                             title="Remove from history"
                                                             aria-label="Remove"
                                                         >

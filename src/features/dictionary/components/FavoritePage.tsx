@@ -2,12 +2,14 @@
 import { useMemo } from "react";
 import { useStore } from "../../../lib/store";
 import { useAllWords } from "../queries";
+import { useSearchParams } from "react-router-dom";
 
 export default function FavoritePage() {
   const favoriteIds = useStore((s) => s.favoriteIds);
   const toggleFavorite = useStore((s) => s.toggleFavorite);
   const setQuery = useStore(s => s.setQuery)
   const allWords = useAllWords().data?.data
+  const setParams = useSearchParams()[1]
   const favWords = useMemo(
     () => allWords?.filter((w) => favoriteIds.includes(w.id)),
     [allWords, favoriteIds]
@@ -43,8 +45,8 @@ export default function FavoritePage() {
     <div className="min-h-screen">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
         <div className="mb-5">
-          <h1 className="inline-flex items-center gap-3 text-xl sm:text-2xl font-bold">
-            <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600">
+          <h1 className="inline-flex items-center gap-3 text-xl sm:text-2xl">
+            <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white text-blue-400">
               <svg
                 width="24"
                 height="24"
@@ -54,7 +56,7 @@ export default function FavoritePage() {
                 <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" />
               </svg>
             </span>
-            <span className="text-yellow-600">
+            <span className="text-white ">
               ពាក្យចូលចិត្ត
             </span>
           </h1>
@@ -65,15 +67,19 @@ export default function FavoritePage() {
           {favWords?.map((w) => (
             <li
               key={w.id}
-              className="group relative rounded-xl border border-slate-200/60 bg-white/80 backdrop-blur-sm hover:border-amber-300/60 hover:shadow-xl hover:shadow-amber-500/15 transition-all duration-300 overflow-hidden"
-              onClick={() => setQuery(w.term)}
+              className="group relative rounded-xl border border-slate-200/60 bg-white/80 backdrop-blur-sm hover:border-blue-300/60 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 overflow-hidden"
+              onClick={() => {
+                setQuery(w.term);
+                setParams({ q: w.term });
+              }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/0 to-orange-50/0 group-hover:from-amber-50/60 group-hover:to-orange-50/60 transition-all duration-300 pointer-events-none"></div>
+              {/* Subtle hover background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/60 group-hover:to-indigo-50/60 transition-all duration-300 pointer-events-none"></div>
 
               <div className="relative p-5 space-y-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start gap-2 mb-2">
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-amber-600 transition-colors break-words">
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors break-words">
                       {w.term}
                     </h3>
                   </div>
@@ -84,17 +90,15 @@ export default function FavoritePage() {
 
                 <div className="pt-2 flex items-center justify-between">
                   <button
-                    onClick={() => toggleFavorite(w.id)}
-                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-amber-50 text-amber-500 border border-amber-200/60 hover:bg-amber-100 hover:border-amber-300 active:scale-95 transition-all shadow-sm"
+                    onClick={(e) => {
+                      e.stopPropagation(); // prevent parent click
+                      toggleFavorite(w.id);
+                    }}
+                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 text-blue-500 border border-blue-200/60 hover:bg-blue-100 hover:border-blue-300 active:scale-95 transition-all shadow-sm"
                     aria-label="Remove from favorites"
                     title="Remove from favorites"
                   >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" />
                     </svg>
                   </button>
@@ -102,6 +106,7 @@ export default function FavoritePage() {
               </div>
             </li>
           ))}
+
         </ul>
       </div>
     </div>
