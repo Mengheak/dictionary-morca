@@ -47,8 +47,7 @@ export interface WordDetailResponse {
   data: WordDetail;
 }
 
-export const BASE_URL = "https://e-library.palmtechnology.net/api";
-// || import.meta.env.VITE_BASE_URL
+export const BASE_URL = import.meta.env.VITE_BASE_URL
 
 export async function searchWords(q: string): Promise<SearchResponse> {
   const res = await fetch(
@@ -60,7 +59,7 @@ export async function searchWords(q: string): Promise<SearchResponse> {
 export async function fetchAllWords() {
   const res = await fetch(BASE_URL + "/dictionary");
   if (!res.ok) throw new Error("Failed to fetch all words");
-  return res.json() as Promise<{ message: string; data: Word[] }>;
+  return res.json() as Promise<Word[]>;
 }
 export async function fetchWordDetails(
   id: string

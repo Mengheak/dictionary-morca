@@ -14,7 +14,6 @@ export default function WordDetails() {
     useEffect(() => {
         if (word) pushHistory({ id: word.id, term: word.term, viewedAt: Date.now() });
     }, [word, pushHistory]);
-
     if (!isOpen) {
         return (
             <div className="flex items-center justify-center h-64 text-slate-400">
@@ -117,7 +116,7 @@ export default function WordDetails() {
                     </div>
                 ) : null}
                 {
-                    word.related_words?.length && (
+                    word.related_words?.length > 0 && (
                         <div className="space-y-4">
                             <h3 className='text-lg font-bold text-slate-900 flex items-center gap-2'>
                                 <img src='./related-icon.svg' width={24} />

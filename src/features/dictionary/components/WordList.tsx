@@ -11,7 +11,6 @@ export default function WordList() {
     const openDetails = useStore(s => s.openDetails);
     const { speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
-    console.table(data)
 
     if (!q.trim()) {
         return (

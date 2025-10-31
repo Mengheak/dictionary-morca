@@ -7,13 +7,13 @@ export default function FavoritePage() {
   const favoriteIds = useStore((s) => s.favoriteIds);
   const toggleFavorite = useStore((s) => s.toggleFavorite);
   const setQuery = useStore(s => s.setQuery)
-  const allWords = useAllWords().data?.data
-
+  const allWords = useAllWords().data
+console.log(allWords)
   const favWords = useMemo(
     () => allWords?.filter((w) => favoriteIds.includes(w.id)),
     [allWords, favoriteIds]
   );
-
+  console.log(favoriteIds)
   if (favoriteIds.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center p-4">

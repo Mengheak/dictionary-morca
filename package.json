@@ -11,8 +11,6 @@
     "preview": "vite preview"
   },
 
-  "proxy": "http://localhost:4400",
-
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.8",
     "@tanstack/react-query": "^5.90.3",
