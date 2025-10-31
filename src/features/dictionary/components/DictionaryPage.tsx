@@ -28,7 +28,7 @@ export default function DictionaryPage() {
         setParams(value ? { q: value } : {}); // updates URL
     };
     return (
-        <div className="space-y-4 p-4">
+        <div className="space-y-4 p-4 lg:px-40">
             <h1 className="text-2xl text-center text-[#E6F7FF] py-3">វចនានុក្រមខ្មែរ</h1>
             <div className="flex items-center justify-center">
 
@@ -36,7 +36,7 @@ export default function DictionaryPage() {
                     value={query}
                     onChange={handleChange}
                     placeholder="ស្វែងរកពាក្យ...."
-                    className="border px-3 py-2 rounded w-full sm:w-96"
+                    className="border px-3 py-2 rounded w-full "
                 />
 
             </div>
@@ -52,7 +52,7 @@ export default function DictionaryPage() {
                 </button>
             </div>
 
-            {!isShowHistory && !isShowFavourite && <div className="grid grid-cols-2 gap-6 max-md:hidden">
+            {!isShowHistory && !isShowFavourite && <div className={`grid  gap-6 max-md:hidden ${IsOpen ? "grid-cols-2" : "grid-cols-1"}`}>
                 <WordList />
                 <WordDetails />
             </div>}

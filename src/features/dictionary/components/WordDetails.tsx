@@ -31,8 +31,8 @@ export default function WordDetails() {
         return (
             <div className="flex items-center justify-center h-64">
                 <div className="space-y-3 text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                    <div className="text-sm text-slate-500">សូមរង់ចាំ...</div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-200 mx-auto"></div>
+                    <div className="text-sm text-white">សូមរង់ចាំ...</div>
                 </div>
             </div>
         );

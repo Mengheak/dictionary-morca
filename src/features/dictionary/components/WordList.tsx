@@ -5,7 +5,7 @@ export default function WordList() {
     const q = useStore(s => s.query);
     const page = useStore(s => s.page);
     const pageSize = useStore(s => s.pageSize);
-    const setPage = useStore(s => s.setPage);
+    // const setPage = useStore(s => s.setPage);
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
@@ -45,8 +45,8 @@ export default function WordList() {
         );
     }
 
-    const totalPages = Math.ceil((data?.total ?? 0) / pageSize);
-    const hasNextPage = page < totalPages;
+    // const totalPages = Math.ceil((data?.total ?? 0) / pageSize);
+    // const hasNextPage = page < totalPages;
 
     const renderCategory = (cat?: string) => {
         if (!cat) return null;
@@ -67,7 +67,6 @@ export default function WordList() {
 
     return (
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-            {/* Header */}
             <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                     <div className="text-sm font-semibold text-slate-700">
@@ -82,9 +81,6 @@ export default function WordList() {
                                 <span className="text-[#062c6b]">លទ្ធផល</span>
                             </span>
                         )}
-                    </div>
-                    <div className="text-xs text-[#062c6b] bg-white px-3 py-1 rounded-full border border-slate-200">
-                        ទំព័រ {page} / {totalPages}
                     </div>
                 </div>
             </div>
@@ -123,7 +119,7 @@ export default function WordList() {
                 ))}
             </ul>
 
-            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4">
+            {/* <div className="bg-slate-50 border-t border-slate-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                     <button
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${page === 1
@@ -157,7 +153,7 @@ export default function WordList() {
                         </svg>
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

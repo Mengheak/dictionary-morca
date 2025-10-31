@@ -12,8 +12,8 @@ const MainHeader: React.FC = () => {
         className='w-[150px]'
       />
       <span className='uppercase text-[#253b91]'>
-        <h1 className='text-2xl font-bold'>
-          ក្រសួងធម្មកា​ និង​ សាសនា
+        <h1 className='text-2xl '>
+          ក្រសួងធម្មការ​និងកិច្ចការ​សាសនា
         </h1>
         Ministry of Cult and Religion
       </span>

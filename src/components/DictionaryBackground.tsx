@@ -1,6 +1,6 @@
 export default function DictionaryBackground() {
   return (
-    <div className="w-full fixed h-screen overflow-hidden inset-0 bg-[#0088cc]/70 -z-20">
+    <div className="w-full fixed h-screen overflow-hidden inset-0 bg-[#0a5b95]/70 -z-20">
       <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
