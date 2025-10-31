@@ -1,10 +1,10 @@
+import { useEffect } from "react";
 import { useStore } from "../../../lib/store";
-import { useAllWords } from "../queries";
 import FavoritePage from "./FavoritePage";
 import HistoryPage from "./HistoryPage";
 import WordDetails from "./WordDetails";
 import WordList from "./WordList";
-
+import { useSearchParams } from "react-router-dom";
 
 export default function DictionaryPage() {
     const query = useStore(s => s.query);
@@ -14,15 +14,26 @@ export default function DictionaryPage() {
     const isShowHistory = useStore(s => s.isShowHistory)
     const isShowFavourite = useStore(s => s.isShowFavourite)
     const toggleShowFavourite = useStore(s => s.toggleShowFavourite)
-    const allwords = useAllWords().data
-    console.table(allwords)
+    const [params, setParams] = useSearchParams()
+    const qFromUrl = params.get("q") || ""
+
+    useEffect(() => {
+        if (qFromUrl !== query) {
+            setQuery(qFromUrl);
+        }
+    }, [qFromUrl]);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setQuery(value);
+        setParams(value ? { q: value } : {}); // updates URL
+    };
     return (
         <div className="space-y-4 p-4">
             <h1 className="text-2xl font-semibold text-center text-yellow-700 py-3">វចនានុក្រមខ្មែរ</h1>
             <div className="flex gap-3 items-center justify-center">
                 <input
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={handleChange}
                     placeholder="ស្វែងរកពាក្យ...."
                     className="border px-3 py-2 rounded w-80"
                 />

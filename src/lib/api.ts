@@ -41,7 +41,10 @@ export interface WordDetail {
   created_at: string;
   updated_at: string;
 }
-
+export type BaseResponse<T> = {
+  message: string
+  data: T
+}
 export interface WordDetailResponse {
   message: string;
   data: WordDetail;
@@ -59,7 +62,7 @@ export async function searchWords(q: string): Promise<SearchResponse> {
 export async function fetchAllWords() {
   const res = await fetch(BASE_URL + "/dictionary");
   if (!res.ok) throw new Error("Failed to fetch all words");
-  return res.json() as Promise<Word[]>;
+  return res.json() as Promise<BaseResponse<Word[]>>;
 }
 export async function fetchWordDetails(
   id: string

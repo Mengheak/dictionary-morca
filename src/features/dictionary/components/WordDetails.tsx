@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useWordDetails } from '../queries';
 import { useStore } from '../../../lib/store';
+import { useSearchParams } from 'react-router-dom';
 
 export default function WordDetails() {
     const isOpen = useStore(s => s.isDetailsOpen);
@@ -10,7 +11,8 @@ export default function WordDetails() {
     const toggleFavorite = useStore(s => s.toggleFavorite);
     const favoriteIds = useStore(s => s.favoriteIds);
     const { data: word, isLoading } = useWordDetails(id || "")
-    const setQuery = useStore(s => s.setQuery);;
+    const setQuery = useStore(s => s.setQuery);
+    const setParams = useSearchParams()[1]
     useEffect(() => {
         if (word) pushHistory({ id: word.id, term: word.term, viewedAt: Date.now() });
     }, [word, pushHistory]);
@@ -164,11 +166,11 @@ export default function WordDetails() {
                             {word.synonyms.map(s => (
                                 <span
                                     key={s}
-                                    onClick={() => { setQuery(s) }}
+                                    onClick={() => { setQuery(s); setParams(s ? { q: s } : {}) }}
                                     className="bg-purple-50 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-full text-sm font-medium hover:bg-purple-100 transition-colors cursor-pointer"
                                 >
                                     {s}
-                                </span>
+                                </span> 
                             ))}
                         </div>
                     </div>

@@ -25,7 +25,7 @@ export function useWordList(q: string, page: number, pageSize: number) {
       const items = res.data || [];
       return {
         items,
-        total: items.length, // if API doesn’t return total count
+        total: items.length,
       };
     },
   });
