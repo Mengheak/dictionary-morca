@@ -263,7 +263,7 @@ function EmptyState() {
                 </svg>
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2">មិនទាន់មានប្រវត្តិទេ</h3>
-            <p className="text-sm text-slate-600 max-w-xs mx-auto">
+            <p className="text-sm text-white max-w-xs mx-auto">
                 ស្វែងរកពាក្យនិងចុចមើល ដើម្បីអោយបង្ហាញនៅទីនេះ
             </p>
         </div>

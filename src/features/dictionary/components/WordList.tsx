@@ -1,6 +1,5 @@
 import { useStore } from '../../../lib/store';
 import { useWordList } from '../queries';
-import { useTTS } from '../../../lib/useTTS';
 export default function WordList() {
 
     const q = useStore(s => s.query);
@@ -9,7 +8,6 @@ export default function WordList() {
     const setPage = useStore(s => s.setPage);
     const setSelectedWordId = useStore(s => s.setSelectedWordId);
     const openDetails = useStore(s => s.openDetails);
-    const { speak, speaking } = useTTS();
     const { data, isLoading, isFetching } = useWordList(q, page, pageSize);
 
     if (!q.trim()) {
@@ -66,13 +64,6 @@ export default function WordList() {
         );
     };
 
-    const handleSpeak = (term: string) => {
-        if (speaking) {
-            stop();
-        } else {
-            speak(term)
-        }
-    };
 
     return (
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
@@ -88,11 +79,11 @@ export default function WordList() {
                         ) : (
                             <span className="flex items-center gap-2">
                                 <span className="text-blue-600">{data.total}</span>
-                                <span className="text-white">លទ្ធផល</span>
+                                <span className="text-[#062c6b]">លទ្ធផល</span>
                             </span>
                         )}
                     </div>
-                    <div className="text-xs text-white bg-white px-3 py-1 rounded-full border border-slate-200">
+                    <div className="text-xs text-[#062c6b] bg-white px-3 py-1 rounded-full border border-slate-200">
                         ទំព័រ {page} / {totalPages}
                     </div>
                 </div>
@@ -117,7 +108,7 @@ export default function WordList() {
                                         {w.term}
                                     </span>
                                     {w.phonetic && (
-                                        <span className="text-sm text-white italic">{w.phonetic}</span>
+                                        <span className="text-sm text-gray-400 italic">{w.phonetic}</span>
                                     )}
                                     {renderCategory(w.category)}
                                 </div>
@@ -126,24 +117,7 @@ export default function WordList() {
                                 </p>
                             </button>
 
-                            <div className="flex items-center gap-2 opacity-0">
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSpeak(w.term || "");
-                                    }}
-                                    className=" border px-2 py-1 rounded-lg text-slate-700 hover:bg-white hover:shadow-sm border-slate-300"
-                                    title="ស្តាប់"
-                                    aria-label={`ស្តាប់ ${w.term}`}
-                                >
-                                    {speaking ? '⏹️' : '🔊'}
-                                </button>
-
-                                <svg className="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </div>
+                        
                         </div>
                     </li>
                 ))}
