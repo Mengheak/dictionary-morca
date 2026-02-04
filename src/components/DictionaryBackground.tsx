@@ -1,4 +1,4 @@
-import circle from "/public/circle-image.png";
+import circle from "/circle-image.png";
 
 
 export default function DictionaryBackground() {
@@ -21,45 +21,6 @@ export default function DictionaryBackground() {
           </pattern>
         </defs>
 
-        <rect width="100%" height="100%" fill="url(#dots)" />
-
-        <g opacity="0.6">
-          <rect x="100" y="150" width="200" height="280" rx="8" fill="url(#bookGradient)" transform="rotate(-15 200 290)">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="-15 200 290"
-              to="-12 200 290"
-              dur="4s"
-              repeatCount="indefinite"
-              direction="alternate"
-            />
-          </rect>
-
-          <rect x="1100" y="400" width="180" height="250" rx="8" fill="url(#bookGradient)" transform="rotate(12 1190 525)">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="12 1190 525"
-              to="15 1190 525"
-              dur="5s"
-              repeatCount="indefinite"
-              direction="alternate"
-            />
-          </rect>
-
-          <rect x="850" y="100" width="160" height="220" rx="6" fill="url(#bookGradient)" transform="rotate(8 930 210)">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="8 930 210"
-              to="5 930 210"
-              dur="4.5s"
-              repeatCount="indefinite"
-              direction="alternate"
-            />
-          </rect>
-        </g>
 
         <g opacity="0.5" fontFamily="Georgia, serif" fontWeight="300">
           <text x="300" y="600" fontSize="120" fill="url(#letterGradient)">ក</text>

@@ -105,7 +105,7 @@ export default function DictionarySidebar(props: Props) {
       className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-2"
     >
       {!isHistory ? (
-        isLoading && tab === "all" && list.length === 0 ? (
+        isLoading && tab === "all" && list?.length === 0 ? (
           <LoadingBlock />
         ) : list?.length ? (
           <>
@@ -157,9 +157,9 @@ export default function DictionarySidebar(props: Props) {
 
   return (
     <>
-      <div className="md:hidden sticky top-0 z-30 border-b content-center border-slate-200 bg-[rgb(var(--card))] px-3 py-3 flex items-center justify-between">
+      <div className="md:hidden sticky top-0 z-30 border-b content-center bg-gray-200 border-slate-200 bg-[rgb(var(--card))] px-3 py-3 flex items-center justify-between">
         <button
-          className="inline-flex items-center justify-center rounded-lg border border-slate-400 px-3 py-2 text-sm"
+          className="inline-flex items-center justify-center rounded-lg border bg-white border-slate-400 px-3 py-2 text-sm"
           onClick={() => setMobileOpen(true)}
           type="button"
           aria-label="Open sidebar"
