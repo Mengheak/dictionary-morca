@@ -1,6 +1,9 @@
+import circle from "/public/circle-image.png";
+
+
 export default function DictionaryBackground() {
   return (
-    <div className="w-full fixed h-screen overflow-hidden inset-0 bg-[#0a5b95]/70 -z-20">
+    <div className="w-full fixed h-screen overflow-hidden inset-0 -z-20">
       <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
@@ -8,11 +11,6 @@ export default function DictionaryBackground() {
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-          <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#3b82f6', stopOpacity: 0.1 }} />
-            <stop offset="100%" style={{ stopColor: '#1e40af', stopOpacity: 0.05 }} />
-          </linearGradient>
-          
           <linearGradient id="letterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style={{ stopColor: '#6366f1', stopOpacity: 0.15 }} />
             <stop offset="100%" style={{ stopColor: '#8b5cf6', stopOpacity: 0.08 }} />
@@ -37,7 +35,7 @@ export default function DictionaryBackground() {
               direction="alternate"
             />
           </rect>
-          
+
           <rect x="1100" y="400" width="180" height="250" rx="8" fill="url(#bookGradient)" transform="rotate(12 1190 525)">
             <animateTransform
               attributeName="transform"
@@ -71,21 +69,27 @@ export default function DictionaryBackground() {
           <text x="1000" y="650" fontSize="95" fill="url(#letterGradient)">ឋ</text>
         </g>
 
-        <g opacity="0.2" stroke="#475569" strokeWidth="2" fill="none">
-          <line x1="400" y1="320" x2="550" y2="320" strokeDasharray="5,5">
-            <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
-          </line>
-          <line x1="400" y1="350" x2="600" y2="350" strokeDasharray="5,5">
-            <animate attributeName="opacity" values="0.2;0.35;0.2" dur="3.5s" repeatCount="indefinite" />
-          </line>
-          <line x1="900" y1="500" x2="1050" y2="500" strokeDasharray="5,5">
-            <animate attributeName="opacity" values="0.15;0.3;0.15" dur="4s" repeatCount="indefinite" />
-          </line>
-          <line x1="900" y1="530" x2="1080" y2="530" strokeDasharray="5,5">
-            <animate attributeName="opacity" values="0.15;0.35;0.15" dur="3.8s" repeatCount="indefinite" />
-          </line>
-        </g>   
+
       </svg>
+
+
+      {/* below is a spinning circle, it needs resources to run (Performance drop)  */}
+
+      <div className="absolute -right-20 top-10 size-[600px] animate-spin [animation-duration:15s]">
+        <img
+          src={circle}
+          alt=""
+          className="absolute inset-0 w-full h-full opacity-60 brightness-50"
+        />
+
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 size-4  rounded-full flex items-center justify-center bg-gray-200 p-3" >ក</div>
+          <div className="absolute right-0 top-1/2 rotate-90 -translate-y-1/2 translate-x-1/2 size-4  rounded-full flex items-center justify-center bg-gray-200 p-3" >ខ</div>
+
+          <div className="absolute left-[135px] rotate-90 top-1/2 -translate-x-1/2 translate-y-1/2 size-4 rounded-full flex items-center justify-center bg-gray-200 p-3" >គ</div>
+        </div>
+      </div>
+
 
     </div>
   );

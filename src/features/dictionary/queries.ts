@@ -1,7 +1,7 @@
-// src/features/dictionary/queries.ts
-import { useQuery } from "@tanstack/react-query";
+
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { fetchAllWords, fetchWordDetails, searchWords } from "../../lib/api";
+import { fetchWordsPage, fetchWordDetails, searchWords } from "../../lib/api";
 
 function useDebounced<T>(value: T, delay = 300) {
   const [v, setV] = useState(value);
@@ -31,20 +31,41 @@ export function useWordList(q: string, page: number, pageSize: number) {
   });
 }
 
-export function useAllWords() {
-  return useQuery({
-    queryKey: ["all-words"], 
-    queryFn: fetchAllWords, 
-    staleTime: 5 * 60_000, 
-    select: (res) => res, 
+export function useInfiniteWords(params?: { q?: string; limit?: number }) {
+  const q = params?.q ?? "";
+  const limit = params?.limit ?? 20;
+
+  return useInfiniteQuery({
+    queryKey: ["dictionary-words", q, limit],
+
+    queryFn: ({ pageParam }) =>
+      fetchWordsPage({
+        pageParam: pageParam as number,
+        limit,
+        q,
+      }),
+
+    initialPageParam: 1,
+
+    getNextPageParam: (lastPage) => {
+      const page = lastPage.data;
+
+      if (page.current_page < page.last_page) {
+        return page.current_page + 1;
+      }
+      return undefined;
+    },
+
+    staleTime: 5 * 60_000,
   });
 }
+
 export function useWordDetails(id: string | null) {
   return useQuery({
     queryKey: ["word-details", id],
     queryFn: () => fetchWordDetails(id!),
-    enabled: !!id,             // only run when an ID exists
-    staleTime: 5 * 60_000,     // cache fresh for 5 minutes
-    select: (res) => res.data, // extract the data object directly
+    enabled: !!id,             
+    staleTime: 5 * 60_000, 
+    select: (res) => res.data, 
   });
 }
