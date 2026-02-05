@@ -17,7 +17,9 @@ export default function DictionaryLayout() {
   const query = useStore((s) => s.query);
   const setQuery = useStore((s) => s.setQuery);
 
-  const searchedWord = useWordList(query, 1, 20).data?.items;
+  // const searchedWord = useWordList(query, 1, 20).data?.items;
+  const {data: searchedResponse, isFetching: isSearching} = useWordList(query, 1, 20);
+
 
   const selectedWordId = useStore((s) => s.selectedWordId);
   const setSelectedWordId = useStore((s) => s.setSelectedWordId);
@@ -55,9 +57,9 @@ export default function DictionaryLayout() {
 
 
   const filteredWords: Word[] = useMemo(() => {
-    if(query) return searchedWord;
+    if(query) return searchedResponse?.items;
     return allWords;
-  }, [allWords, query, searchedWord]) as Word[];
+  }, [allWords, query, searchedResponse?.items]) as Word[];
 
 
   const allTotal = filteredWords?.length ?? 0;
@@ -114,12 +116,13 @@ export default function DictionaryLayout() {
           onSearchChange={onSearchChange}
           allCount={allTotal}
           favoritesCount={favoriteIds.length}
-          historyCount={history.length}
+          historyCount={history.length} 
           selectedWordId={selectedWordId}
           favoriteIds={favoriteIds}
           listAll={filteredWords}                 
           listFavorites={filteredFavorites} 
           listHistory={filteredHistory}
+          isSearching={isSearching}
           onPickWord={onPickWord}
           fetchNextPage={infinite.fetchNextPage}
           hasNextPage={query ? false :!!infinite.hasNextPage}

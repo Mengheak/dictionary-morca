@@ -29,6 +29,7 @@ type Props = {
 
   favoriteIds: string[];
 
+  isSearching: boolean;
   listAll: Word[];
   listFavorites: Word[];
   listHistory: HistoryItem[];
@@ -59,6 +60,7 @@ export default function DictionarySidebar(props: Props) {
     listHistory,
     onPickWord,
     fetchNextPage,
+    isSearching,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
@@ -69,13 +71,15 @@ export default function DictionarySidebar(props: Props) {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
+
+
   const onScroll = useCallback(() => {
     if (tab !== "all") return;
 
     const el = scrollRef.current;
     if (!el) return;
 
-    const threshold = 160; 
+    const threshold = 160;
     const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - threshold;
 
     if (!nearBottom) return;
@@ -151,7 +155,10 @@ export default function DictionarySidebar(props: Props) {
   const Desktop = (
     <aside className="hidden md:flex h-screen flex-col border-r border-slate-200 bg-[rgb(var(--card))] overflow-hidden">
       {HeaderArea}
-      {ListArea}
+      {
+        isSearching && <LoadingBlock />
+      }
+      {!isSearching && ListArea}
     </aside>
   );
 
@@ -207,9 +214,16 @@ function EmptyList({ label }: { label: string }) {
 
 function LoadingBlock() {
   return (
-    <div className="mx-2 rounded-xl border border-slate-200 bg-white/40 px-4 py-6 text-center">
-      <div className="text-sm font-medium text-slate-800">កំពុងទាញយក…</div>
-      <div className="mt-1 text-xs text-slate-500">សូមរង់ចាំបន្តិច</div>
+    <div className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-4xl px-4 py-10 md:px-8">
+        <div className="flex items-center justify-center h-[60vh]">
+          <div className="space-y-3 text-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto" />
+            <div className="text-sm text-gray-300">សូមរង់ចាំ...</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+

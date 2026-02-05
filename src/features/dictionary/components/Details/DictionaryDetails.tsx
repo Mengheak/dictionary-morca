@@ -65,7 +65,6 @@ export default function DictionaryDetails({
       </div>
     );
   }
-  console.log(word)
   return (
     <div className="h-full overflow-y-auto">
       <div className=" max-w-full px-4 py-4 md:px-8 md:py-8">

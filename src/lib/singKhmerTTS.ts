@@ -83,7 +83,7 @@ function segmentSing(s: string) {
 }
 
 export function singToIPA(sing: string): string {
-  let ipaWords: string[] = [];
+  const ipaWords: string[] = [];
   for (const word of segmentSing(sing)) {
     let w = word.toLowerCase();
     let ipa = "";
